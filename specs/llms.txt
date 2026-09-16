@@ -132,12 +132,15 @@
 - [Introduction](https://trigger.dev/docs/cli-introduction.md): The Trigger.dev CLI has a number of options and commands to help you develop locally, self host, and deploy your tasks.
 - [CLI deploy command](https://trigger.dev/docs/cli-deploy-commands.md): Use the deploy command to deploy your tasks to Trigger.dev.
 - [CLI dev command](https://trigger.dev/docs/cli-dev-commands.md): The `trigger.dev dev` command is used to run your tasks locally.
+- [CLI env commands](https://trigger.dev/docs/cli-env-commands.md): List, get, set, and pull environment variables for a Trigger.dev project.
 - [CLI init command](https://trigger.dev/docs/cli-init-commands.md): Use these options when running the CLI `init` command.
 - [CLI list-profiles command](https://trigger.dev/docs/cli-list-profiles-commands.md): Use these options when using the `list-profiles` CLI command.
 - [CLI login command](https://trigger.dev/docs/cli-login-commands.md): Use these options when logging in to Trigger.dev using the CLI.
 - [CLI logout command](https://trigger.dev/docs/cli-logout-commands.md): Use these options when using the `logout` CLI command.
 - [CLI preview archive command](https://trigger.dev/docs/cli-preview-archive.md): The `trigger.dev preview archive` command can be used to archive a preview branch.
+- [CLI projects commands](https://trigger.dev/docs/cli-projects-commands.md): Create, inspect, and rename Trigger.dev projects from the terminal.
 - [CLI promote command](https://trigger.dev/docs/cli-promote-commands.md): Use the promote command to promote a previously deployed version to the current version.
+- [CLI runs commands](https://trigger.dev/docs/cli-runs-commands.md): Use these commands to list, inspect, replay and cancel runs from your terminal.
 - [CLI switch command](https://trigger.dev/docs/cli-switch.md): The `trigger.dev switch` command can be used to switch between profiles.
 - [CLI update command](https://trigger.dev/docs/cli-update-commands.md): Use these options when using the `update` CLI command.
 - [CLI whoami command](https://trigger.dev/docs/cli-whoami-commands.md): Use these options to display the current logged in user and project details.
