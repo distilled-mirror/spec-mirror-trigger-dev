@@ -83,15 +83,15 @@ The default API URL is `https://api.trigger.dev`.
 
 Access presets define what a key can do. Some presets require a paid plan. The dashboard shows which presets your organization can use — see [pricing](https://trigger.dev/pricing).
 
-| Preset              | Access                                                                                                                                         |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Trigger only**    | Trigger runs and batches for all or selected tasks. Trigger responses include scoped public access tokens for the runs and batches they create |
-| **Task operator**   | Trigger all or selected tasks and inspect or operate on their runs                                                                             |
-| **Observer**        | Read runs, tasks, batches, logs, traces, and queues                                                                                            |
-| **Operator**        | Observe and operate on runs and queues, and trigger tasks                                                                                      |
-| **Deploy only**     | Deploy versions, sync environment variables, and manage Preview branches                                                                       |
-| **Variables only**  | Read and write environment variables in this environment                                                                                       |
-| **No restrictions** | Full access to the environment                                                                                                                 |
+| Preset | Access |
+| - | - |
+| **Trigger only** | Trigger runs and batches for all or selected tasks. Trigger responses include scoped public access tokens for the runs and batches they create |
+| **Task operator** | Trigger all or selected tasks and inspect or operate on their runs |
+| **Observer** | Read runs, tasks, batches, logs, traces, and queues |
+| **Operator** | Observe and operate on runs and queues, and trigger tasks |
+| **Deploy only** | Deploy versions, sync environment variables, and manage Preview branches |
+| **Variables only** | Read and write environment variables in this environment |
+| **No restrictions** | Full access to the environment |
 
 **Trigger only** and **Task operator** can be restricted to selected tasks. Task restrictions use task identifiers, such as `send-email`. A request involving multiple tasks — such as a batch trigger — succeeds only when the key can access every task in the request, so a task-restricted key can batch-trigger only its selected tasks.
 

@@ -49,27 +49,27 @@ function personalAccessTokenExample() {
 <Accordion title="View endpoint support">
   Consult the following table to see which endpoints support each authentication method.
 
-  | Endpoint               | Secret key | Personal Access Token |
-  | ---------------------- | ---------- | --------------------- |
-  | `task.trigger`         | ✅          |                       |
-  | `task.batchTrigger`    | ✅          |                       |
-  | `runs.list`            | ✅          | ✅                     |
-  | `runs.retrieve`        | ✅          |                       |
-  | `runs.cancel`          | ✅          |                       |
-  | `runs.replay`          | ✅          |                       |
-  | `envvars.list`         | ✅          | ✅                     |
-  | `envvars.retrieve`     | ✅          | ✅                     |
-  | `envvars.upload`       | ✅          | ✅                     |
-  | `envvars.create`       | ✅          | ✅                     |
-  | `envvars.update`       | ✅          | ✅                     |
-  | `envvars.del`          | ✅          | ✅                     |
-  | `schedules.list`       | ✅          |                       |
-  | `schedules.create`     | ✅          |                       |
-  | `schedules.retrieve`   | ✅          |                       |
-  | `schedules.update`     | ✅          |                       |
-  | `schedules.activate`   | ✅          |                       |
-  | `schedules.deactivate` | ✅          |                       |
-  | `schedules.del`        | ✅          |                       |
+  | Endpoint | Secret key | Personal Access Token |
+  | - | - | - |
+  | `task.trigger` | ✅ | |
+  | `task.batchTrigger` | ✅ | |
+  | `runs.list` | ✅ | ✅ |
+  | `runs.retrieve` | ✅ | |
+  | `runs.cancel` | ✅ | |
+  | `runs.replay` | ✅ | |
+  | `envvars.list` | ✅ | ✅ |
+  | `envvars.retrieve` | ✅ | ✅ |
+  | `envvars.upload` | ✅ | ✅ |
+  | `envvars.create` | ✅ | ✅ |
+  | `envvars.update` | ✅ | ✅ |
+  | `envvars.del` | ✅ | ✅ |
+  | `schedules.list` | ✅ | |
+  | `schedules.create` | ✅ | |
+  | `schedules.retrieve` | ✅ | |
+  | `schedules.update` | ✅ | |
+  | `schedules.activate` | ✅ | |
+  | `schedules.deactivate` | ✅ | |
+  | `schedules.del` | ✅ | |
 </Accordion>
 
 ### Environment API key
@@ -195,11 +195,11 @@ Unlike `TriggerClient` instances (which stay isolated unless you opt in), `auth.
 
 [Sessions](/docs/ai-chat/sessions) are addressed by a session-scoped public access token — a short-lived JWT you mint in your backend and pass to frontend or server-side clients. The token carries one or both of two scopes, each pinned to a session by its friendly ID (`session_…`) or your `externalId`:
 
-| Scope                    | Grants                                                                                                                                         |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `read:sessions:{id}`     | Retrieve the session, list its runs, and subscribe to and drain its `.out` [channel](/docs/management/sessions/channels) (and every named channel). |
-| `read:sessions:{id}:out` | Subscribe to and drain the session's `.out` channel only. The bearer cannot retrieve the session row or read named channels.                   |
-| `write:sessions:{id}`    | Append to the session's `.in` channel, and create runs on the session (including the create call itself).                                      |
+| Scope | Grants |
+| - | - |
+| `read:sessions:{id}` | Retrieve the session, list its runs, and subscribe to and drain its `.out` [channel](/docs/management/sessions/channels) (and every named channel). |
+| `read:sessions:{id}:out` | Subscribe to and drain the session's `.out` channel only. The bearer cannot retrieve the session row or read named channels. |
+| `write:sessions:{id}` | Append to the session's `.in` channel, and create runs on the session (including the create call itself). |
 
 Three boundaries follow from the table, and all are enforced server-side:
 
