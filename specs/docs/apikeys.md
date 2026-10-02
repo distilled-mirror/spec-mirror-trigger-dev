@@ -172,3 +172,6 @@ Keep your instance and SDK current before creating keys. Calling a public-token 
     Create scoped public tokens for frontend and realtime access.
   </Card>
 </CardGroup>
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

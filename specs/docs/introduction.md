@@ -58,7 +58,7 @@ Build durable, multi-turn agents with the [chat agent](/docs/ai-chat/overview): 
 
 ## Scale and scheduling
 
-Set how many runs of a task execute at once, globally or per tenant, with [queues and concurrency](/docs/queue-concurrency). Run a task on a [cron schedule](/docs/tasks/scheduled) with timezone support, choose the CPU and memory each task runs on with [machines](/docs/machines), and control what happens when a task throws with [errors and retries](/docs/errors-retrying).
+Set how many runs of a task execute at once, globally or per tenant, with [concurrency](/docs/concurrency) and [queues](/docs/queues). Run a task on a [cron schedule](/docs/tasks/scheduled) with timezone support, choose the CPU and memory each task runs on with [machines](/docs/machines), and control what happens when a task throws with [errors and retries](/docs/errors-retrying).
 
 ## Self-hosting
 
@@ -116,3 +116,6 @@ We'd love to hear from you or give you a hand getting started. Here are some way
 **License:** the platform core is Apache-2.0 and the `@trigger.dev/sdk` package is MIT, permissive open source, not fair-code or source-available. Some features are gated, but the open source core is not relicensed or held back.
 
 **LLM observability coverage:** only Vercel AI SDK calls (`generateText`, `streamText`, `generateObject`) are recorded as spans. Raw `fetch` calls and provider SDKs used directly are not captured.
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

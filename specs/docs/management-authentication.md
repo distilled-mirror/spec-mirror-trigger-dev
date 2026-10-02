@@ -225,3 +225,6 @@ const publicToken = await auth.createPublicToken({
 The `publicAccessToken` returned by [`sessions.start()`](/docs/management/sessions/create) already carries both scopes for the session it created, so you usually don't mint one by hand for the create flow.
 
 For the full channel HTTP surface these scopes authorize, see [Session channels](/docs/management/sessions/channels). For the SDK side, see [Sessions](/docs/ai-chat/sessions). For general public-token usage (expiration formats, trigger tokens, scoping to runs and tasks), see [Realtime authentication](/docs/realtime/auth).
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

@@ -27,7 +27,8 @@
 - [Wait for](https://trigger.dev/docs/wait-for.md): Wait for a period of time, then continue execution.
 - [Wait until](https://trigger.dev/docs/wait-until.md): Wait until a date, then continue execution.
 - [Wait for token](https://trigger.dev/docs/wait-for-token.md): Wait until a token is completed using waitpoint tokens.
-- [Concurrency & Queues](https://trigger.dev/docs/queue-concurrency.md): Configure what you want to happen when there is more than one run at a time.
+- [Queues](https://trigger.dev/docs/queues.md): Control the order your runs execute in.
+- [Concurrency](https://trigger.dev/docs/concurrency.md): Limit how many runs execute at once: per task, per tenant, or shared across tasks.
 - [Versioning](https://trigger.dev/docs/versioning.md): We use atomic versioning to ensure that started tasks are not affected by changes to the task code.
 - [Machines](https://trigger.dev/docs/machines.md): Configure the number of vCPUs and GBs of RAM you want the task to use.
 - [Idempotency](https://trigger.dev/docs/idempotency.md): An API call or operation is idempotent if it has the same result when called more than once.
@@ -42,7 +43,7 @@
 - [Hidden tasks](https://trigger.dev/docs/hidden-tasks.md): Create tasks that are not exported from your trigger files but can still be executed.
 - [Bulk actions with the SDK](https://trigger.dev/docs/runs/bulk-actions.md): Cancel or replay many runs from the SDK using run IDs or SDK run-list filters.
 - [AI Agents](https://trigger.dev/docs/ai-chat/overview.md): Durable multi-turn AI chats — one Trigger.dev task per conversation, surviving refreshes, deploys, and crashes.
-- [Quick Start](https://trigger.dev/docs/ai-chat/quick-start.md): Get a working AI agent in 3 steps — define an agent, generate a token, and wire up the frontend.
+- [Quick Start](https://trigger.dev/docs/ai-chat/quick-start.md): Define an agent, authorize chat sessions on your server, and stream responses into a React frontend.
 - [Migrate from an AI SDK route handler](https://trigger.dev/docs/ai-chat/migrating-from-a-route-handler.md): Move an existing useChat + streamText chat app to chat.agent — what stays identical, what you delete, and a prompt you can hand to a coding agent.
 - [Anatomy of an agent](https://trigger.dev/docs/ai-chat/anatomy.md): The three parts of a chat agent — the agent task that runs the turn loop, the durable session that carries messages, and the frontend transport — what each does and where it's documented.
 - [Backend](https://trigger.dev/docs/ai-chat/backend.md): Three approaches to building your chat backend — chat.agent(), session iterator, or raw task primitives.
@@ -71,10 +72,10 @@
 - [Version upgrades](https://trigger.dev/docs/ai-chat/patterns/version-upgrades.md): Gracefully migrate chat agents to a new deployment using chat.requestUpgrade(), chat.endAndContinue(), and the continuation mechanism.
 - [Database persistence for chat](https://trigger.dev/docs/ai-chat/patterns/database-persistence.md): Split conversation state and live session metadata across hooks — preload, turn start, turn complete — without tying the pattern to a specific ORM or schema.
 - [Persistence and replay](https://trigger.dev/docs/ai-chat/patterns/persistence-and-replay.md): How chat.agent rebuilds conversation history at run boot — the transcript storage's persisted conversation plus session.out replay, and what changes when your app owns the model's context.
-- [Branching conversations](https://trigger.dev/docs/ai-chat/patterns/branching-conversations.md): Build ChatGPT-style conversation trees with edit, regenerate, undo, and branch switching using hydrateMessages, chat.history, and actions.
+- [Branching conversations](https://trigger.dev/docs/ai-chat/patterns/branching-conversations.md): Persist an active conversation branch and use transcript storage and actions to switch the agent's context.
 - [Code execution sandbox](https://trigger.dev/docs/ai-chat/patterns/code-sandbox.md): Warm an isolated sandbox on each chat turn, run an AI SDK executeCode tool, and tear down right before the run suspends — using chat.agent hooks and chat.local.
-- [Human-in-the-loop](https://trigger.dev/docs/ai-chat/patterns/human-in-the-loop.md): Pause the agent mid-response to ask the user a clarifying question, then resume with their answer.
-- [Tool result auditing](https://trigger.dev/docs/ai-chat/patterns/tool-result-auditing.md): Fire side effects exactly once per resolved tool call — audit logs, billing, notifications — using extractNewToolResults inside hydrateMessages or onTurnComplete.
+- [Human-in-the-loop](https://trigger.dev/docs/ai-chat/patterns/human-in-the-loop.md): Ask users to choose an option or approve a tool call, then continue the agent with their response.
+- [Tool result auditing](https://trigger.dev/docs/ai-chat/patterns/tool-result-auditing.md): Find new tool results before they merge into chat history, and deduplicate audit writes with a durable idempotency key.
 - [Large payloads in chat.agent](https://trigger.dev/docs/ai-chat/patterns/large-payloads.md): Why a single chunk on the chat stream is capped at ~1 MiB, what error you'll see, and how to work around it with ID references.
 - [Agent Skills](https://trigger.dev/docs/ai-chat/patterns/skills.md): Ship reusable capabilities (folders with SKILL.md + scripts) that a chat agent discovers and invokes on demand.
 - [OOM resilience](https://trigger.dev/docs/ai-chat/patterns/oom-resilience.md): Recover from out-of-memory errors mid-turn by automatically retrying the failed turn on a larger machine — without losing the in-flight user message or re-processing completed turns.
@@ -108,8 +109,7 @@
 - [CI / GitHub Actions](https://trigger.dev/docs/github-actions.md): You can easily deploy your tasks with GitHub actions and other CI environments.
 - [Preview branches](https://trigger.dev/docs/deployment/preview-branches.md): Create isolated environments for each branch of your code, allowing you to test changes before merging to production. You can create preview branches manually or automatically from your git branches.
 - [Development branches](https://trigger.dev/docs/deployment/dev-branches.md): Run multiple local dev sessions in isolation by giving each one its own development branch. Use branches to keep parallel work (in separate worktrees, directories, or agents) from clashing.
-- [Version skew protection](https://trigger.dev/docs/deployment/version-skew-protection.md): Pin task runs to the deployment that matches the release of your app that triggered them.
-- [Atomic deploys](https://trigger.dev/docs/deployment/atomic-deployment.md): Use atomic deploys to coordinate changes to your tasks and your application.
+- [Atomic deployments](https://trigger.dev/docs/deployment/atomic-deployment.md): Keep your app and your tasks in sync with version skew protection: pin every run to the deployment built for the release of your app that triggered it.
 - [GitHub integration](https://trigger.dev/docs/github-integration.md): Automatically deploy your tasks on every push to your GitHub repository.
 - [Vercel integration](https://trigger.dev/docs/vercel-integration.md): Automatically deploy your tasks whenever you deploy to Vercel.
 - [Private networking](https://trigger.dev/docs/private-networking/overview.md): Connect your tasks to private resources in your AWS account using AWS PrivateLink.
@@ -211,6 +211,11 @@
 - [Pause or Resume Queue](https://trigger.dev/docs/management/queues/pause.md): Pause a queue to prevent new runs from starting, or resume a paused queue. Runs that are currently executing will continue to completion.
 - [Override Concurrency Limit](https://trigger.dev/docs/management/queues/concurrency-override.md): Override the concurrency limit of a queue. This is useful for temporarily scaling up or down based on demand.
 - [Reset Concurrency Limit](https://trigger.dev/docs/management/queues/concurrency-reset.md): Reset the concurrency limit of a queue back to its base value defined in code.
+- [List Concurrency Limits](https://trigger.dev/docs/management/concurrency-limits/list.md): List the environment's declared concurrency limits (anonymous inline limits appear under their derived `task/<task-id>` names), with each limit's bounds and its live running and queued counts. Results are ordered by the underlying row name, so named limits sort before `task/`-derived inline limits.
+- [Retrieve Concurrency Limit](https://trigger.dev/docs/management/concurrency-limits/retrieve.md): Retrieve a concurrency limit by name, with its bounds and live running and queued counts.
+- [Pause or Resume Concurrency Limit](https://trigger.dev/docs/management/concurrency-limits/pause.md): Pause a concurrency limit to prevent runs holding it from starting, or resume a paused limit. Runs that are currently executing will continue to completion, and the limit's configured bounds are kept.
+- [Override Concurrency Limit](https://trigger.dev/docs/management/concurrency-limits/override.md): Override a concurrency limit's bounds. Only the given fields change; the declared values are kept and restored by reset. To stop runs holding a limit, prefer the pause endpoint (it keeps the configured bounds); overriding `total` to `0` also blocks every run holding the limit.
+- [Reset Concurrency Limit](https://trigger.dev/docs/management/concurrency-limits/reset.md): Reset a concurrency limit back to the values declared in your code, clearing any override.
 - [List Schedules](https://trigger.dev/docs/management/schedules/list.md): List all schedules. You can also paginate the results.
 - [Create Schedule](https://trigger.dev/docs/management/schedules/create.md): Create a new `IMPERATIVE` schedule based on the specified options.
 - [Retrieve Schedule](https://trigger.dev/docs/management/schedules/retrieve.md): Get a schedule by its ID.
@@ -336,3 +341,6 @@
 - [openapi](/docs/openapi.yml)
 - [package](/docs/package.json)
 - [v3-openapi](/docs/v3-openapi.yaml)
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

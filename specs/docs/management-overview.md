@@ -63,3 +63,6 @@ const payload = { to: "user@example.com" };
 await prod.tasks.trigger("send-email", payload);
 await preview.runs.list({ status: ["COMPLETED"] });
 ```
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

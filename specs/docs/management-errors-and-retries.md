@@ -66,3 +66,6 @@ async function main() {
   When running inside a task, the SDK ignores customized retry options for certain functions (e.g.,
   `task.trigger`, `task.batchTrigger`), and uses retry settings optimized for task execution.
 </Note>
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

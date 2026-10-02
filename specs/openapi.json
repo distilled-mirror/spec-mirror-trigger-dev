@@ -3928,7 +3928,8 @@
           }
         ],
         "requestBody": {
-          "required": false,
+          "required": true,
+          "description": "At least an empty JSON object `{}` must be sent; a zero-length body is rejected with a 400.",
           "content": {
             "application/json": {
               "schema": {
@@ -3982,6 +3983,355 @@
           {
             "lang": "typescript",
             "source": "import { queues } from \"@trigger.dev/sdk\";\n\n// Reset concurrency limit to the base value\nawait queues.resetConcurrencyLimit(\"queue_1234\");\n\n// Using type and name\nawait queues.resetConcurrencyLimit({\n  type: \"task\",\n  name: \"my-task-id\",\n});"
+          }
+        ]
+      }
+    },
+    "/api/v1/concurrency-limits": {
+      "get": {
+        "operationId": "list_concurrency_limits_v1",
+        "summary": "List concurrency limits",
+        "description": "List the environment's declared concurrency limits (anonymous inline limits\nappear under their derived `task/<task-id>` names), with each limit's bounds\nand its live running and queued counts. Results are ordered by the underlying\nrow name, so named limits sort before `task/`-derived inline limits.\n",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 25,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Concurrency limits retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ConcurrencyLimitObject"
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "currentPage": {
+                          "type": "integer"
+                        },
+                        "totalPages": {
+                          "type": "integer"
+                        },
+                        "count": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request"
+          }
+        },
+        "tags": [
+          "concurrency-limits"
+        ],
+        "security": [
+          {
+            "secretKey": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "typescript",
+            "source": "import { concurrencyLimits } from \"@trigger.dev/sdk\";\n\nconst limits = await concurrencyLimits.list({ page: 1, perPage: 20 });"
+          }
+        ]
+      }
+    },
+    "/api/v1/concurrency-limits/{name}": {
+      "get": {
+        "operationId": "retrieve_concurrency_limit_v1",
+        "summary": "Retrieve concurrency limit",
+        "description": "Retrieve a concurrency limit by name, with its bounds and live running and queued counts.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The limit's name, as declared with `concurrencyLimit()`"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Concurrency limit retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConcurrencyLimitObject"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request"
+          },
+          "404": {
+            "description": "Concurrency limit not found"
+          }
+        },
+        "tags": [
+          "concurrency-limits"
+        ],
+        "security": [
+          {
+            "secretKey": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "typescript",
+            "source": "import { concurrencyLimits } from \"@trigger.dev/sdk\";\n\nconst limit = await concurrencyLimits.retrieve(\"openai\");"
+          }
+        ]
+      }
+    },
+    "/api/v1/concurrency-limits/{name}/override": {
+      "post": {
+        "operationId": "override_concurrency_limit_v1",
+        "summary": "Override concurrency limit",
+        "description": "Override a concurrency limit's bounds. Only the given fields change; the declared\nvalues are kept and restored by reset. To stop runs holding a limit, prefer the\npause endpoint (it keeps the configured bounds); overriding `total` to `0` also\nblocks every run holding the limit.\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The limit's name"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "minProperties": 1,
+                "additionalProperties": false,
+                "description": "At least one of `perKey` or `total` must be provided.",
+                "properties": {
+                  "perKey": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "description": "Caps each concurrencyKey pool; runs without a key share one pool. May not exceed the environment concurrency limit."
+                  },
+                  "total": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "description": "Caps every run holding this limit, keys or not. May not exceed the environment concurrency limit."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Concurrency limit overridden successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConcurrencyLimitObject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters, or a bound exceeds the environment concurrency limit"
+          },
+          "401": {
+            "description": "Unauthorized request"
+          },
+          "404": {
+            "description": "Concurrency limit not found"
+          },
+          "409": {
+            "description": "The limit changed concurrently; retry the request"
+          }
+        },
+        "tags": [
+          "concurrency-limits"
+        ],
+        "security": [
+          {
+            "secretKey": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "typescript",
+            "source": "import { concurrencyLimits } from \"@trigger.dev/sdk\";\n\n// Raise the shared cap\nawait concurrencyLimits.override(\"openai\", { total: 50 });"
+          }
+        ]
+      }
+    },
+    "/api/v1/concurrency-limits/{name}/pause": {
+      "post": {
+        "operationId": "pause_concurrency_limit_v1",
+        "summary": "Pause or resume a concurrency limit",
+        "description": "Pause a concurrency limit to prevent runs holding it from starting, or resume a\npaused limit. Runs that are currently executing will continue to completion, and\nthe limit's configured bounds are kept.\n",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The limit's name"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "action"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "pause",
+                      "resume"
+                    ],
+                    "description": "Whether to pause or resume the limit"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Concurrency limit paused or resumed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConcurrencyLimitObject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          },
+          "401": {
+            "description": "Unauthorized request"
+          },
+          "404": {
+            "description": "Concurrency limit not found"
+          },
+          "409": {
+            "description": "The limit changed concurrently; retry the request"
+          }
+        },
+        "tags": [
+          "concurrency-limits"
+        ],
+        "security": [
+          {
+            "secretKey": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "typescript",
+            "source": "import { concurrencyLimits } from \"@trigger.dev/sdk\";\n\n// Pause the limit\nawait concurrencyLimits.pause(\"openai\");\n\n// Resume the limit\nawait concurrencyLimits.resume(\"openai\");"
+          }
+        ]
+      }
+    },
+    "/api/v1/concurrency-limits/{name}/reset": {
+      "post": {
+        "operationId": "reset_concurrency_limit_v1",
+        "summary": "Reset concurrency limit",
+        "description": "Reset a concurrency limit back to the values declared in your code, clearing any override.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The limit's name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Concurrency limit reset successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConcurrencyLimitObject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The limit has no override to reset"
+          },
+          "401": {
+            "description": "Unauthorized request"
+          },
+          "404": {
+            "description": "Concurrency limit not found"
+          },
+          "409": {
+            "description": "The limit changed concurrently; retry the request"
+          }
+        },
+        "tags": [
+          "concurrency-limits"
+        ],
+        "security": [
+          {
+            "secretKey": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "typescript",
+            "source": "import { concurrencyLimits } from \"@trigger.dev/sdk\";\n\nawait concurrencyLimits.reset(\"openai\");"
           }
         ]
       }
@@ -5374,12 +5724,113 @@
           }
         }
       },
+      "ConcurrencyLimitObject": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "perKey",
+          "total",
+          "running",
+          "queued"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The limit's id, starting with `climit_`",
+            "example": "climit_abcdef123456"
+          },
+          "name": {
+            "type": "string",
+            "description": "The limit's name, as declared with `concurrencyLimit()`",
+            "example": "openai"
+          },
+          "perKey": {
+            "type": "object",
+            "description": "Caps each concurrencyKey pool; runs without a key share one pool",
+            "properties": {
+              "current": {
+                "type": "integer",
+                "nullable": true,
+                "description": "Enforced right now (null = no per-key bound). Enforcement clamps it to the environment concurrency limit at admit time.",
+                "example": null
+              },
+              "base": {
+                "type": "integer",
+                "nullable": true,
+                "description": "The declared value an override reverts to on reset",
+                "example": null
+              },
+              "override": {
+                "type": "integer",
+                "nullable": true,
+                "description": "The overridden value, when an override is active",
+                "example": null
+              },
+              "overriddenAt": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true,
+                "description": "When the override was applied",
+                "example": null
+              }
+            }
+          },
+          "total": {
+            "type": "object",
+            "description": "Caps every run holding this limit, keys or not",
+            "properties": {
+              "current": {
+                "type": "integer",
+                "nullable": true,
+                "description": "Enforced right now (null = no total bound). Enforcement clamps it to the environment concurrency limit at admit time.",
+                "example": 25
+              },
+              "base": {
+                "type": "integer",
+                "nullable": true,
+                "description": "The declared value an override reverts to on reset",
+                "example": 25
+              },
+              "override": {
+                "type": "integer",
+                "nullable": true,
+                "description": "The overridden value, when an override is active",
+                "example": null
+              },
+              "overriddenAt": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true,
+                "description": "When the override was applied",
+                "example": null
+              }
+            }
+          },
+          "running": {
+            "type": "integer",
+            "description": "Runs executing that hold this limit",
+            "example": 14
+          },
+          "queued": {
+            "type": "integer",
+            "description": "Runs that are queued and must clear this limit to execute",
+            "example": 100
+          },
+          "paused": {
+            "type": "boolean",
+            "description": "Whether the limit is paused. A paused limit admits no runs until resumed; its configured bounds are kept.",
+            "example": false
+          }
+        }
+      },
       "QueueObject": {
         "type": "object",
         "required": [
           "id",
           "name",
           "type",
+          "version",
           "running",
           "queued",
           "paused"
@@ -5404,6 +5855,15 @@
             "description": "The type of queue:\n- `task`: Created automatically for each task\n- `custom`: Created explicitly in your code using `queue()`\n",
             "example": "task"
           },
+          "version": {
+            "type": "string",
+            "enum": [
+              "V1",
+              "V2"
+            ],
+            "description": "Discriminates the shape:\n- `V1`: the queue carries its own `concurrencyLimit` (applied per key when runs pass a `concurrencyKey`, to the whole queue when they don't) and its `concurrency` override state\n- `V2`: the queue is only the line runs wait in; concurrency is declared with the task `concurrency` option and managed through the concurrency-limits endpoints. `concurrencyLimit` is always null and `concurrency` is absent.\n",
+            "example": "V1"
+          },
           "running": {
             "type": "integer",
             "description": "The number of runs currently executing",
@@ -5422,12 +5882,12 @@
           "concurrencyLimit": {
             "type": "integer",
             "nullable": true,
-            "description": "The current concurrency limit of the queue",
+            "description": "The queue's own concurrency limit. Meaningful on V1 queues; always null on V2 queues.",
             "example": 10
           },
           "concurrency": {
             "type": "object",
-            "description": "Detailed concurrency information",
+            "description": "Detailed concurrency information. V1 queues only.",
             "properties": {
               "current": {
                 "type": "integer",
@@ -7040,6 +7500,7 @@
         "properties": {
           "value": {
             "type": "string",
+            "description": "The value to store. An empty string is valid and is stored as-is, not treated as a deletion.",
             "example": "slack_123456"
           }
         },
