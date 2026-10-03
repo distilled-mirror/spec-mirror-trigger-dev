@@ -106,7 +106,7 @@
 - [Custom build extensions](https://trigger.dev/docs/config/extensions/custom.md): Customize how your project is built and deployed to Trigger.dev with your own custom build extensions
 - [Deployment](https://trigger.dev/docs/deployment/overview.md): Learn how to deploy your tasks to Trigger.dev.
 - [Environment Variables](https://trigger.dev/docs/deploy-environment-variables.md): Any environment variables used in your tasks need to be added so the deployed code will run successfully.
-- [CI / GitHub Actions](https://trigger.dev/docs/github-actions.md): You can easily deploy your tasks with GitHub actions and other CI environments.
+- [CI / GitHub Actions](https://trigger.dev/docs/github-actions.md): Deploy your tasks from GitHub Actions and other CI environments using an environment API key.
 - [Preview branches](https://trigger.dev/docs/deployment/preview-branches.md): Create isolated environments for each branch of your code, allowing you to test changes before merging to production. You can create preview branches manually or automatically from your git branches.
 - [Development branches](https://trigger.dev/docs/deployment/dev-branches.md): Run multiple local dev sessions in isolation by giving each one its own development branch. Use branches to keep parallel work (in separate worktrees, directories, or agents) from clashing.
 - [Atomic deployments](https://trigger.dev/docs/deployment/atomic-deployment.md): Keep your app and your tasks in sync with version skew protection: pin every run to the deployment built for the release of your app that triggered it.
