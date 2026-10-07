@@ -24,6 +24,18 @@
   </Card>
 </CardGroup>
 
+## Set up with AI
+
+Copy this prompt into your AI coding assistant from your app's directory:
+
+```text theme={"theme":"css-variables"}
+Bootstrap a Trigger.dev project: trigger.dev/SKILL.md
+```
+
+Your agent guides you through login, choosing or creating an organization and project, and running your first task locally. You authorize login yourself, and the agent asks when a choice is ambiguous.
+
+[Read the full setup instructions](https://trigger.dev/SKILL.md) before running.
+
 ## What is Trigger.dev?
 
 Trigger.dev is the open source platform for building and running durable AI agents and workflows in TypeScript. Run them for hours, configure automatic retries, control concurrency, and manage queues. There's no execution timeout, and no queue or worker infrastructure for you to build.
