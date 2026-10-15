@@ -11,14 +11,14 @@
 When the SDK method is unable to connect to the API server, or the API server returns a non-successful response, the SDK will throw an `ApiError` that you can catch and handle:
 
 ```ts theme={"theme":"css-variables"}
-import { runs, APIError } from "@trigger.dev/sdk";
+import { runs, ApiError } from "@trigger.dev/sdk";
 
 async function main() {
   try {
     const run = await runs.retrieve("run_1234");
   } catch (error) {
     if (error instanceof ApiError) {
-      console.error(`API error: ${error.status}, ${error.headers}, ${error.body}`);
+      console.error(`API error: ${error.status} ${error.message}`, error.error);
     } else {
       console.error(`Unknown error: ${error.message}`);
     }
@@ -28,7 +28,7 @@ async function main() {
 
 ## Retries
 
-The SDK will automatically retry requests that fail due to network errors or server errors. By default, the SDK will retry requests up to 3 times, with an exponential backoff delay between retries.
+The SDK will automatically retry requests that fail due to network errors, `5xx` responses, and `408`, `409` and `429` responses. By default, the SDK makes up to 5 attempts per request (`maxAttempts: 5`, so up to 4 retries) with exponential backoff (`minTimeoutInMs` 1000, `maxTimeoutInMs` 30000, `factor` 1.6, `randomize` false). Any retry fields you pass are merged over these defaults.
 
 You can customize the retry behavior by passing a `requestOptions` option to the `configure` function:
 
@@ -61,11 +61,6 @@ async function main() {
   });
 }
 ```
-
-<Note>
-  When running inside a task, the SDK ignores customized retry options for certain functions (e.g.,
-  `task.trigger`, `task.batchTrigger`), and uses retry settings optimized for task execution.
-</Note>
 
 
 This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

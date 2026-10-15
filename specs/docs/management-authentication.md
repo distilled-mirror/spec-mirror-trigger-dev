@@ -6,7 +6,7 @@
 
 > Authenticating with the Trigger.dev management API
 
-There are two methods of authenticating with the management API: using a named API key associated with a specific environment in a project (`secretKey`), or using a personal access token (`personalAccessToken`). Use both methods only on a backend server. An environment API key's access is limited by the preset and task restrictions selected when you create it.
+There are two methods of authenticating with the management API: using a named API key associated with a specific environment in a project, or using a personal access token (PAT). Pass either one as the `accessToken` option (`secretKey` is a deprecated alias). Use both methods only on a backend server. An environment API key's access is limited by the preset and task restrictions selected when you create it.
 
 <Note>
   There is a separate authentication strategy when making requests from your frontend application.
@@ -14,34 +14,34 @@ There are two methods of authenticating with the management API: using a named A
   only.
 </Note>
 
-Certain API functions work with both authentication methods, but require different arguments depending on the method used. For example, the `runs.list` function can be called using either a `secretKey` or a `personalAccessToken`, but the `projectRef` argument is required when using a `personalAccessToken`:
+Certain API functions work with both authentication methods, but require different arguments depending on the method used. For example, the `runs.list` function can be called using either an environment API key or a personal access token, but the `projectRef` argument is required when using a personal access token:
 
 ```ts theme={"theme":"css-variables"}
 import { configure, runs } from "@trigger.dev/sdk";
 
-// Using secretKey authentication
+// Using accessToken authentication
 configure({
-  secretKey: process.env["TRIGGER_SECRET_KEY"], // starts with tr_dev_sk_, tr_prod_sk_, or tr_preview_sk_
+  accessToken: process.env["TRIGGER_SECRET_KEY"], // starts with tr_dev_, tr_stg_, tr_prod_, or tr_preview_ (named keys add sk_)
 });
 
-function secretKeyExample() {
+function accessTokenExample() {
   return runs.list({
     limit: 10,
     status: ["COMPLETED"],
   });
 }
 
-// Using personalAccessToken authentication
+// Using personal access token authentication
 configure({
-  secretKey: process.env["TRIGGER_ACCESS_TOKEN"], // starts with tr_pat_
+  accessToken: process.env["TRIGGER_ACCESS_TOKEN"], // starts with tr_pat_
 });
 
 function personalAccessTokenExample() {
-  // Notice the projectRef argument is required when using a personalAccessToken
-  return runs.list("prof_1234", {
+  // Notice the projectRef argument is required when using a personal access token
+  return runs.list("proj_1234", {
     limit: 10,
     status: ["COMPLETED"],
-    projectRef: "tr_proj_1234567890",
+    env: "prod",
   });
 }
 ```
@@ -74,7 +74,7 @@ function personalAccessTokenExample() {
 
 ### Environment API key
 
-Create a named environment API key with the narrowest access preset that supports your integration. Pass it through the `secretKey` option or `TRIGGER_SECRET_KEY` environment variable. Read the [API Keys guide](/docs/apikeys) for available presets and task restrictions.
+Create a named environment API key with the narrowest access preset that supports your integration. Pass it through the `accessToken` option or `TRIGGER_SECRET_KEY` environment variable. Read the [API Keys guide](/docs/apikeys) for available presets and task restrictions.
 
 ### Personal Access Token (PAT)
 
@@ -86,7 +86,7 @@ For example, when uploading environment variables using a PAT, you must provide 
 import { configure, envvars } from "@trigger.dev/sdk";
 
 configure({
-  secretKey: process.env["TRIGGER_ACCESS_TOKEN"], // starts with tr_pat_
+  accessToken: process.env["TRIGGER_ACCESS_TOKEN"], // starts with tr_pat_
 });
 
 await envvars.upload("proj_1234", "dev", {
@@ -109,7 +109,7 @@ When working with preview branches, you may need to target a specific branch whe
     import { configure, envvars } from "@trigger.dev/sdk";
 
     configure({
-      secretKey: process.env["TRIGGER_ACCESS_TOKEN"], // starts with tr_pat_
+      accessToken: process.env["TRIGGER_ACCESS_TOKEN"], // starts with tr_pat_
       previewBranch: "feature-xyz",
     });
 
@@ -138,8 +138,7 @@ When working with preview branches, you may need to target a specific branch whe
 This will set the `DATABASE_URL` environment variable specifically for the `feature-xyz` preview branch.
 
 <Note>
-  The `x-trigger-branch` header is only relevant when working with the `preview` or `dev` environments (`{env}
-      ` parameter set to `preview` or `development`). It has no effect when working with `staging`, or `prod`
+  The `x-trigger-branch` header is only relevant when working with the `preview` or `dev` environments (`{env}` parameter set to `preview` or `dev`). It has no effect when working with `staging`, or `prod`
   environments.
 </Note>
 
@@ -151,7 +150,7 @@ When using the SDK to manage preview branch environment variables, the branch ta
 import { configure, envvars } from "@trigger.dev/sdk";
 
 configure({
-  secretKey: process.env["TRIGGER_ACCESS_TOKEN"], // starts with tr_pat_
+  accessToken: process.env["TRIGGER_ACCESS_TOKEN"], // starts with tr_pat_
   previewBranch: "feature-xyz", // Optional: specify the branch
 });
 
@@ -220,7 +219,7 @@ const publicToken = await auth.createPublicToken({
 });
 ```
 
-`sessions` accepts a single ID or an array. The default token TTL is 1 hour. One token authorizes **both** URL forms — pass either your `externalId` or the `session_…` ID in the path.
+`sessions` accepts a single ID or an array. When you mint the token with `auth.createPublicToken()`, the default TTL is 15 minutes (pass `expirationTime` to change it). Tokens returned by `sessions.start()` default to 1 hour. One token authorizes **both** URL forms — pass either your `externalId` or the `session_…` ID in the path.
 
 The `publicAccessToken` returned by [`sessions.start()`](/docs/management/sessions/create) already carries both scopes for the session it created, so you usually don't mint one by hand for the create flow.
 

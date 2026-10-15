@@ -427,7 +427,120 @@
       "post": {
         "operationId": "replay_run_v1",
         "summary": "Replay a run",
-        "description": "Creates a new run with the same payload and options as the original run.",
+        "description": "Creates a new run with the same payload and options as the original run, in the same environment. Send a body to override the payload, metadata, or trigger options for the new run. The body is optional; an empty body replays the run unchanged.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "payload": {
+                    "description": "The payload for the new run. Omit it to reuse the original run's payload."
+                  },
+                  "payloadType": {
+                    "type": "string",
+                    "enum": [
+                      "application/json",
+                      "application/super+json"
+                    ],
+                    "description": "How `payload` is encoded. Defaults to `application/json`. With `application/super+json`, `payload` must be a SuperJSON string, which keeps types like `Date` and `BigInt`. The SDK sends this automatically."
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "Metadata for the new run. Omit it to reuse the original run's metadata."
+                  },
+                  "tags": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/RunTags"
+                      }
+                    ],
+                    "description": "Tags for the new run. Replaces the original run's tags."
+                  },
+                  "queue": {
+                    "type": "string",
+                    "description": "The name of an existing queue in the environment to run on."
+                  },
+                  "concurrencyKey": {
+                    "type": "string",
+                    "description": "The concurrency key for the new run."
+                  },
+                  "machine": {
+                    "type": "string",
+                    "enum": [
+                      "micro",
+                      "small-1x",
+                      "small-2x",
+                      "medium-1x",
+                      "medium-2x",
+                      "large-1x",
+                      "large-2x"
+                    ],
+                    "example": "small-2x",
+                    "description": "The machine preset for the new run."
+                  },
+                  "version": {
+                    "type": "string",
+                    "description": "Lock the new run to this deployed version, for example `20250101.1`. Defaults to the current version."
+                  },
+                  "region": {
+                    "type": "string",
+                    "description": "The region to run in. Defaults to the original run's region."
+                  },
+                  "delay": {
+                    "type": "string",
+                    "description": "Delay the new run, as a duration (`1h30m`) or an ISO 8601 date."
+                  },
+                  "ttl": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      }
+                    ],
+                    "description": "How long the new run can stay queued before it expires, as a duration string (`10m`) or a number of seconds."
+                  },
+                  "idempotencyKey": {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "description": "An idempotency key for the new run. A repeated request with the same key returns the same run."
+                  },
+                  "idempotencyKeyTTL": {
+                    "type": "string",
+                    "description": "How long the idempotency key is valid, as a duration (`1h`)."
+                  },
+                  "maxAttempts": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "The maximum number of attempts for the new run."
+                  },
+                  "maxDuration": {
+                    "type": "number",
+                    "description": "The maximum duration of the new run in seconds."
+                  },
+                  "priority": {
+                    "type": "number",
+                    "description": "Priority offset in seconds. Higher values are dequeued sooner."
+                  }
+                }
+              },
+              "example": {
+                "payload": {
+                  "userId": "user_456"
+                },
+                "tags": [
+                  "replayed"
+                ],
+                "delay": "10m"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful request",
@@ -446,7 +559,7 @@
             }
           },
           "400": {
-            "description": "Invalid request",
+            "description": "Invalid request, for example an unknown body field, an unknown queue, or a version that is not deployed to the environment.",
             "content": {
               "application/json": {
                 "schema": {
@@ -454,10 +567,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "Invalid or missing run ID",
-                        "Failed to create new run"
-                      ]
+                      "description": "What was wrong with the request."
                     }
                   }
                 }
@@ -482,6 +592,21 @@
               }
             }
           },
+          "403": {
+            "description": "The credentials can't trigger the run's task. A replay starts a new run, so it needs permission to trigger the task as well as write access to the run.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "404": {
             "description": "Resource not found",
             "content": {
@@ -499,6 +624,9 @@
                 }
               }
             }
+          },
+          "413": {
+            "description": "The request body is larger than the maximum payload size."
           }
         },
         "tags": [
@@ -512,7 +640,7 @@
         "x-codeSamples": [
           {
             "lang": "typescript",
-            "source": "import { runs } from \"@trigger.dev/sdk\";\n\nconst handle = await runs.replay(\"run_1234\");"
+            "source": "import { runs } from \"@trigger.dev/sdk\";\n\nconst handle = await runs.replay(\"run_1234\");\n\nconst withOverrides = await runs.replay(\"run_1234\", {\n  payload: { userId: \"user_456\" },\n  tags: [\"replayed\"],\n  delay: \"10m\",\n});"
           }
         ]
       }
@@ -643,31 +771,162 @@
       "get": {
         "operationId": "get_run_trace_v1",
         "summary": "Retrieve run trace",
-        "description": "Returns the OTel trace subtree for the requested run — the run's span as `rootSpan`, its ancestor chain, and its descendant spans. For child or nested runs in a large trace, this is scoped to that run rather than the trace-wide root.",
+        "description": "Returns the OTel trace subtree for the requested run — the run's span as `rootSpan`, its ancestor chain, and its descendant spans. For child or nested runs in a large trace, this is scoped to that run rather than the trace-wide root. Pass `page[size]` or `page[after]` to page the trace as flat spans instead; paging works for runs at the root of their trace.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page[size]",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Turns on paging. Spans per page; values are clamped to 1,000–10,000. Defaults to 10,000 when only `page[after]` is sent."
+          },
+          {
+            "in": "query",
+            "name": "page[after]",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Turns on paging. The `pagination.next` cursor from the previous page, passed back unchanged. Omit it for the first page."
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Successful request",
+            "description": "Successful request. Without page parameters, the nested trace tree. With them, one page of flat spans.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "title": "Trace tree",
+                      "properties": {
+                        "trace": {
+                          "type": "object",
+                          "properties": {
+                            "traceId": {
+                              "type": "string",
+                              "description": "The OTel trace ID."
+                            },
+                            "rootSpan": {
+                              "allOf": [
+                                {
+                                  "$ref": "#/components/schemas/SpanDetailedSummary"
+                                }
+                              ],
+                              "description": "The requested run's span, with nested descendant spans as `children`. Not necessarily the trace-wide root span."
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "title": "Trace page",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "description": "Spans on this page, in start-time order. A span can appear on two pages (in progress, then finished); keep the finished one.",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "parentId": {
+                                "type": "string"
+                              },
+                              "runId": {
+                                "type": "string"
+                              },
+                              "message": {
+                                "type": "string"
+                              },
+                              "startTime": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "duration": {
+                                "type": "number",
+                                "description": "Duration in nanoseconds."
+                              },
+                              "isError": {
+                                "type": "boolean"
+                              },
+                              "isPartial": {
+                                "type": "boolean",
+                                "description": "Still in progress."
+                              },
+                              "isCancelled": {
+                                "type": "boolean"
+                              },
+                              "level": {
+                                "type": "string",
+                                "enum": [
+                                  "TRACE",
+                                  "DEBUG",
+                                  "LOG",
+                                  "INFO",
+                                  "WARN",
+                                  "ERROR"
+                                ]
+                              },
+                              "attemptNumber": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        },
+                        "attemptFailures": {
+                          "type": "array",
+                          "description": "Failed-attempt records on this page. A span still in progress under a failed attempt of its run counts as errored.",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "spanId": {
+                                "type": "string"
+                              },
+                              "attemptNumber": {
+                                "type": "number"
+                              },
+                              "runId": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "next": {
+                              "type": "string",
+                              "description": "Cursor for the next page. Absent on the last page."
+                            },
+                            "truncated": {
+                              "type": "boolean",
+                              "description": "Some spans or records were left out. Either paging stopped early (for example while an emergency span limit is in place) or a span had more records than one read allows; `next` is still returned in that case."
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid page parameters, or page parameters on a run that isn't at the root of its trace",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "trace": {
-                      "type": "object",
-                      "properties": {
-                        "traceId": {
-                          "type": "string",
-                          "description": "The OTel trace ID."
-                        },
-                        "rootSpan": {
-                          "allOf": [
-                            {
-                              "$ref": "#/components/schemas/SpanDetailedSummary"
-                            }
-                          ],
-                          "description": "The requested run's span, with nested descendant spans as `children`. Not necessarily the trace-wide root span."
-                        }
-                      }
+                    "error": {
+                      "type": "string"
                     }
                   }
                 }
@@ -710,6 +969,36 @@
                 }
               }
             }
+          },
+          "501": {
+            "description": "Paging isn't supported by this deployment's trace store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The trace store is temporarily unavailable, or paging is temporarily limited to the first page. Back off and retry later (see `Retry-After`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -723,7 +1012,13 @@
         "x-codeSamples": [
           {
             "lang": "typescript",
+            "label": "Trace tree",
             "source": "const response = await fetch(\"https://api.trigger.dev/api/v1/runs/run_1234/trace\", {\n  headers: {\n    Authorization: `Bearer ${process.env.TRIGGER_SECRET_KEY}`,\n  },\n});\n\nconst { trace } = await response.json();"
+          },
+          {
+            "lang": "typescript",
+            "label": "Paged",
+            "source": "const spans = [];\nlet after;\n\ndo {\n  const query = new URLSearchParams({ \"page[size]\": \"10000\" });\n  if (after) query.set(\"page[after]\", after);\n\n  const response = await fetch(\n    `https://api.trigger.dev/api/v1/runs/run_1234/trace?${query}`,\n    { headers: { Authorization: `Bearer ${process.env.TRIGGER_SECRET_KEY}` } }\n  );\n  const page = await response.json();\n\n  spans.push(...page.data);\n  after = page.pagination.next;\n} while (after);"
           }
         ]
       }
@@ -2245,7 +2540,7 @@
       "get": {
         "operationId": "list_runs_v1",
         "summary": "List runs",
-        "description": "List runs in a specific environment. You can filter the runs by status, created at, task identifier, version, and more.",
+        "description": "List runs in a specific environment. You can filter the runs by status, created at, task identifier, version, and more. Without a `filter[createdAt]` value, only runs created in the last 7 days are returned. This endpoint is for browsing, reporting, and bulk operations, not for coordinating runs, so don't call it before every trigger or poll it in a loop. See [runs.list() best practices](/runs/list-best-practices).",
         "parameters": [
           {
             "$ref": "#/components/parameters/cursorPagination"
@@ -2291,12 +2586,12 @@
           {
             "lang": "typescript",
             "label": "List runs",
-            "source": "import { runs } from \"@trigger.dev/sdk\";\n\n// Get the first page of runs\nlet page = await runs.list({ limit: 20 });\n\nfor (const run of page.data) {\n  console.log(`Run ID: ${run.id}, Status: ${run.status}`);\n}\n\n// Convenience methods are provided for manually paginating:\nwhile (page.hasNextPage()) {\n  page = await page.getNextPage();\n  // Do something with the next page of runs\n}\n\n// Auto-paginate through all runs\nconst allRuns = [];\n\nfor await (const run of runs.list({ limit: 20 })) {\n  allRuns.push(run);\n}"
+            "source": "import { runs } from \"@trigger.dev/sdk\";\n\n// Get the first page of runs created in the last day\nlet page = await runs.list({ period: \"1d\", limit: 20 });\n\nfor (const run of page.data) {\n  console.log(`Run ID: ${run.id}, Status: ${run.status}`);\n}\n\n// Convenience methods are provided for manually paginating:\nwhile (page.hasNextPage()) {\n  page = await page.getNextPage();\n  // Do something with the next page of runs\n}\n\n// Auto-paginate through all runs created in the last day\nconst allRuns = [];\n\nfor await (const run of runs.list({ period: \"1d\", limit: 20 })) {\n  allRuns.push(run);\n}"
           },
           {
             "lang": "typescript",
             "label": "Filter runs",
-            "source": "import { runs } from \"@trigger.dev/sdk\";\n\nconst response = await runs.list({\n  status: [\"QUEUED\", \"EXECUTING\"],\n  taskIdentifier: [\"my-task\", \"my-other-task\"],\n  from: new Date(\"2024-04-01T00:00:00Z\"),\n  to: new Date(),\n});\n\nfor (const run of response.data) {\n  console.log(`Run ID: ${run.id}, Status: ${run.status}`);\n}"
+            "source": "import { runs } from \"@trigger.dev/sdk\";\n\nconst response = await runs.list({\n  status: [\"QUEUED\", \"EXECUTING\"],\n  taskIdentifier: [\"my-task\", \"my-other-task\"],\n  from: new Date(Date.now() - 24 * 60 * 60 * 1000), // last 24 hours\n  to: new Date(),\n});\n\nfor (const run of response.data) {\n  console.log(`Run ID: ${run.id}, Status: ${run.status}`);\n}"
           }
         ]
       }
@@ -2591,7 +2886,7 @@
           {
             "lang": "typescript",
             "label": "Filter runs",
-            "source": "import { runs, configure } from \"@trigger.dev/sdk\";\n\nconfigure({\n  accessToken: \"tr_pat_1234\" // always use an environment variable for this\n});\n\nconst response = await runs.list(\"proj_1234\", {\n  env: [\"prod\", \"staging\"],\n  status: [\"QUEUED\", \"EXECUTING\"],\n  taskIdentifier: [\"my-task\", \"my-other-task\"],\n  from: new Date(\"2024-04-01T00:00:00Z\"),\n  to: new Date(),\n});\n\nfor (const run of response.data) {\n  console.log(`Run ID: ${run.id}, Status: ${run.status}`);\n}"
+            "source": "import { runs, configure } from \"@trigger.dev/sdk\";\n\nconfigure({\n  accessToken: \"tr_pat_1234\" // always use an environment variable for this\n});\n\nconst response = await runs.list(\"proj_1234\", {\n  env: [\"prod\", \"staging\"],\n  status: [\"QUEUED\", \"EXECUTING\"],\n  taskIdentifier: [\"my-task\", \"my-other-task\"],\n  from: new Date(Date.now() - 24 * 60 * 60 * 1000), // last 24 hours\n  to: new Date(),\n});\n\nfor (const run of response.data) {\n  console.log(`Run ID: ${run.id}, Status: ${run.status}`);\n}"
           }
         ]
       }
@@ -4072,7 +4367,7 @@
       "get": {
         "operationId": "retrieve_concurrency_limit_v1",
         "summary": "Retrieve concurrency limit",
-        "description": "Retrieve a concurrency limit by name, with its bounds and live running and queued counts.",
+        "description": "Retrieve a concurrency limit by name, with its bounds and live running and queued counts. With the concurrencyKey query parameter, retrieve the limit's view for that one key instead (its per-key bound, any per-key override and when it expires, and the runs executing for the key).",
         "parameters": [
           {
             "name": "name",
@@ -4082,6 +4377,15 @@
               "type": "string"
             },
             "description": "The limit's name, as declared with `concurrencyLimit()`"
+          },
+          {
+            "name": "concurrencyKey",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Return the view for this concurrencyKey instead of the limit itself."
           }
         ],
         "responses": {
@@ -4090,7 +4394,14 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ConcurrencyLimitObject"
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ConcurrencyLimitObject"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ConcurrencyLimitKeyObject"
+                    }
+                  ]
                 }
               }
             }
@@ -4139,24 +4450,62 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "minProperties": 1,
-                "additionalProperties": false,
-                "description": "At least one of `perKey` or `total` must be provided.",
-                "properties": {
-                  "perKey": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 100000,
-                    "description": "Caps each concurrencyKey pool; runs without a key share one pool. May not exceed the environment concurrency limit."
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "title": "Limit bounds",
+                    "description": "Override the limit itself. At least one of `perKey` or `total` must be provided.",
+                    "minProperties": 1,
+                    "additionalProperties": false,
+                    "properties": {
+                      "perKey": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000,
+                        "description": "Caps each concurrencyKey pool; runs without a key share one pool. May not exceed the environment concurrency limit."
+                      },
+                      "total": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000,
+                        "description": "Caps every run holding this limit, keys or not. May not exceed the environment concurrency limit."
+                      }
+                    }
                   },
-                  "total": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 100000,
-                    "description": "Caps every run holding this limit, keys or not. May not exceed the environment concurrency limit."
+                  {
+                    "type": "object",
+                    "title": "Per-key cap",
+                    "description": "Override the limit's `perKey` for one concurrencyKey only. The override is temporary (see `ttl`), changes no other bound, and applies to every task holding the limit. `total` cannot be given here.",
+                    "required": [
+                      "concurrencyKey",
+                      "perKey"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "concurrencyKey": {
+                        "type": "string",
+                        "description": "The concurrencyKey whose cap is overridden."
+                      },
+                      "perKey": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000,
+                        "description": "The cap for this key; `0` blocks it. May not exceed the environment concurrency limit."
+                      },
+                      "ttl": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "integer"
+                          }
+                        ],
+                        "description": "How long the override lasts, as a duration such as \"7d\" or a number of seconds. Default 7 days, maximum 30 days."
+                      }
+                    }
                   }
-                }
+                ]
               }
             }
           }
@@ -4167,7 +4516,14 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ConcurrencyLimitObject"
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ConcurrencyLimitObject"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ConcurrencyLimitKeyObject"
+                    }
+                  ]
                 }
               }
             }
@@ -4284,7 +4640,7 @@
       "post": {
         "operationId": "reset_concurrency_limit_v1",
         "summary": "Reset concurrency limit",
-        "description": "Reset a concurrency limit back to the values declared in your code, clearing any override.",
+        "description": "Reset a concurrency limit back to the values declared in your code, clearing any override. With a concurrencyKey in the body, clear that key's per-key override instead and leave the limit itself alone.",
         "parameters": [
           {
             "name": "name",
@@ -4296,13 +4652,36 @@
             "description": "The limit's name"
           }
         ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "concurrencyKey": {
+                    "type": "string",
+                    "description": "Clear the per-key override for this concurrencyKey only."
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Concurrency limit reset successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ConcurrencyLimitObject"
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ConcurrencyLimitObject"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ConcurrencyLimitKeyObject"
+                    }
+                  ]
                 }
               }
             }
@@ -5820,6 +6199,70 @@
           "paused": {
             "type": "boolean",
             "description": "Whether the limit is paused. A paused limit admits no runs until resumed; its configured bounds are kept.",
+            "example": false
+          }
+        }
+      },
+      "ConcurrencyLimitKeyObject": {
+        "type": "object",
+        "description": "A limit's view for one concurrencyKey, returned when a request names a concurrencyKey.",
+        "required": [
+          "name",
+          "concurrencyKey",
+          "perKey",
+          "running",
+          "paused"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The limit's name, as declared with `concurrencyLimit()`",
+            "example": "subagents"
+          },
+          "concurrencyKey": {
+            "type": "string",
+            "description": "The concurrencyKey this view is for",
+            "example": "session_abc123"
+          },
+          "perKey": {
+            "type": "object",
+            "description": "The per-key bound for this key",
+            "properties": {
+              "current": {
+                "type": "integer",
+                "nullable": true,
+                "description": "Enforced right now for this key (the override when one is in force, else the limit's perKey), clamped to the environment concurrency limit",
+                "example": 3
+              },
+              "base": {
+                "type": "integer",
+                "nullable": true,
+                "description": "The limit's own perKey as enforced",
+                "example": 1
+              },
+              "override": {
+                "type": "integer",
+                "nullable": true,
+                "description": "The key's temporary override, when one is in force",
+                "example": 3
+              },
+              "expiresAt": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true,
+                "description": "When the key's override lapses; null when there is none",
+                "example": "2026-10-16T12:00:00.000Z"
+              }
+            }
+          },
+          "running": {
+            "type": "integer",
+            "description": "Runs executing for this key that hold this limit",
+            "example": 2
+          },
+          "paused": {
+            "type": "boolean",
+            "description": "Whether the limit is paused. A paused limit admits no runs, override or not.",
             "example": false
           }
         }

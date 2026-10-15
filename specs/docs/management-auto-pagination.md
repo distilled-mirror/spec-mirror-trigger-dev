@@ -6,7 +6,7 @@
 
 > Using auto-pagination with the Trigger.dev management API
 
-All list endpoints in the management API support auto-pagination.
+Paginated list methods in the management API (`runs`, `schedules`, `queues`, `deployments`, and others) support auto-pagination.
 You can use `for await … of` syntax to iterate through items across all pages:
 
 ```ts theme={"theme":"css-variables"}

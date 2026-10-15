@@ -14,6 +14,7 @@
 - [Scheduled tasks (cron)](https://trigger.dev/docs/tasks/scheduled.md): A task that is triggered on a recurring schedule using cron syntax.
 - [Triggering](https://trigger.dev/docs/triggering.md): Tasks need to be triggered in order to run.
 - [Runs](https://trigger.dev/docs/runs.md): Understanding the lifecycle of task run execution in Trigger.dev
+- [Using runs.list() efficiently](https://trigger.dev/docs/runs/list-best-practices.md): When to use runs.list(), the patterns to avoid, and what to use instead.
 - [API keys](https://trigger.dev/docs/apikeys.md): Authenticate backend requests with environment-specific API keys.
 - [Building with AI: overview](https://trigger.dev/docs/building-with-ai.md): Tools and resources for building Trigger.dev projects with AI coding assistants.
 - [MCP Introduction](https://trigger.dev/docs/mcp-introduction.md): Learn how to install and configure the Trigger.dev MCP Server
@@ -129,6 +130,7 @@
 - [Subscribe to tasks from your backend](https://trigger.dev/docs/realtime/backend/overview.md): Subscribe to run progress, stream AI output, and react to task status changes from your backend code or other tasks.
 - [Run updates (backend)](https://trigger.dev/docs/realtime/backend/subscribe.md): Subscribe to run status changes, metadata updates, and tag changes from your backend code using async iterators.
 - [Stream data to your backend (AI, files)](https://trigger.dev/docs/realtime/backend/streams.md): Read AI/LLM output, file chunks, and other streaming data from your Trigger.dev tasks in backend code.
+- [Input Streams](https://trigger.dev/docs/realtime/backend/input-streams.md): Send data into running tasks from your backend code
 - [Introduction](https://trigger.dev/docs/cli-introduction.md): The Trigger.dev CLI has a number of options and commands to help you develop locally, self host, and deploy your tasks.
 - [CLI deploy command](https://trigger.dev/docs/cli-deploy-commands.md): Use the deploy command to deploy your tasks to Trigger.dev.
 - [CLI dev command](https://trigger.dev/docs/cli-dev-commands.md): The `trigger.dev dev` command is used to run your tasks locally.
@@ -138,7 +140,7 @@
 - [CLI login command](https://trigger.dev/docs/cli-login-commands.md): Use these options when logging in to Trigger.dev using the CLI.
 - [CLI logout command](https://trigger.dev/docs/cli-logout-commands.md): Use these options when using the `logout` CLI command.
 - [CLI preview archive command](https://trigger.dev/docs/cli-preview-archive.md): The `trigger.dev preview archive` command can be used to archive a preview branch.
-- [CLI projects commands](https://trigger.dev/docs/cli-projects-commands.md): Create, inspect, and rename Trigger.dev projects from the terminal.
+- [CLI projects commands](https://trigger.dev/docs/cli-projects-commands.md): List, create, inspect, and rename Trigger.dev projects from the terminal.
 - [CLI promote command](https://trigger.dev/docs/cli-promote-commands.md): Use the promote command to promote a previously deployed version to the current version.
 - [CLI runs commands](https://trigger.dev/docs/cli-runs-commands.md): Use these commands to list, inspect, replay and cancel runs from your terminal.
 - [CLI switch command](https://trigger.dev/docs/cli-switch.md): The `trigger.dev switch` command can be used to switch between profiles.
@@ -187,15 +189,15 @@
 - [Retrieve a batch](https://trigger.dev/docs/management/batches/retrieve.md): Retrieve a batch by its ID, including its status and the IDs of all runs in the batch.
 - [Retrieve batch results](https://trigger.dev/docs/management/batches/retrieve-results.md): Returns the execution results of all completed runs in a batch. Only finished runs (successful or failed) are included in the items array — runs that are still executing are omitted. Returns 404 if the batch doesn't exist.
 - [Stream batch items](https://trigger.dev/docs/management/batches/stream-items.md): Phase 2 of 2-phase batch API. Accepts an NDJSON stream of batch items and enqueues them. Each line in the body should be a valid BatchItemNDJSON object. The stream is processed with backpressure - items are enqueued as they arrive. The batch is sealed when the stream completes successfully.
-- [List runs](https://trigger.dev/docs/management/runs/list.md): List runs in a specific environment. You can filter the runs by status, created at, task identifier, version, and more.
+- [List runs](https://trigger.dev/docs/management/runs/list.md): List runs in a specific environment. You can filter the runs by status, created at, task identifier, version, and more. Without a `filter[createdAt]` value, only runs created in the last 7 days are returned. This endpoint is for browsing, reporting, and bulk operations, not for coordinating runs, so…
 - [Retrieve run](https://trigger.dev/docs/management/runs/retrieve.md): Retrieve information about a run, including its status, payload, output, and attempts. If you authenticate with a Public API key, we will omit the payload and output fields for security reasons.
-- [Replay run](https://trigger.dev/docs/management/runs/replay.md): Creates a new run with the same payload and options as the original run.
+- [Replay run](https://trigger.dev/docs/management/runs/replay.md): Creates a new run with the same payload and options as the original run, in the same environment. Send a body to override the payload, metadata, or trigger options for the new run. The body is optional; an empty body replays the run unchanged.
 - [Cancel run](https://trigger.dev/docs/management/runs/cancel.md): Cancels an in-progress run. If the run is already completed, this will have no effect.
 - [Reschedule run](https://trigger.dev/docs/management/runs/reschedule.md): Updates a delayed run with a new delay. Only valid when the run is in the DELAYED state.
 - [Update metadata](https://trigger.dev/docs/management/runs/update-metadata.md): Update the metadata of a run.
 - [Add tags to a run](https://trigger.dev/docs/management/runs/add-tags.md): Adds one or more tags to a run. Runs can have a maximum of 10 tags. Duplicate tags are ignored.
 - [Retrieve run events](https://trigger.dev/docs/management/runs/retrieve-events.md): Returns all OTel span events for a run. Useful for debugging and observability.
-- [Retrieve run trace](https://trigger.dev/docs/management/runs/retrieve-trace.md): Returns the OTel trace subtree for the requested run — the run's span as `rootSpan`, its ancestor chain, and its descendant spans. For child or nested runs in a large trace, this is scoped to that run rather than the trace-wide root.
+- [Retrieve run trace](https://trigger.dev/docs/management/runs/retrieve-trace.md): Returns the OTel trace subtree for the requested run — the run's span as `rootSpan`, its ancestor chain, and its descendant spans. For child or nested runs in a large trace, this is scoped to that run rather than the trace-wide root. Pass `page[size]` or `page[after]` to page the trace as flat spans…
 - [Retrieve run result](https://trigger.dev/docs/management/runs/retrieve-result.md): Returns the execution result of a completed run. Returns 404 if the run doesn't exist or hasn't finished yet.
 - [Create bulk action](https://trigger.dev/docs/management/bulk-actions/create.md): Create an asynchronous bulk action to cancel or replay runs selected by run IDs or filters.
 - [List bulk actions](https://trigger.dev/docs/management/bulk-actions/list.md): List bulk actions in the current environment. Bulk actions are returned newest first and can be paginated with cursor pagination.
@@ -212,10 +214,10 @@
 - [Override Concurrency Limit](https://trigger.dev/docs/management/queues/concurrency-override.md): Override the concurrency limit of a queue. This is useful for temporarily scaling up or down based on demand.
 - [Reset Concurrency Limit](https://trigger.dev/docs/management/queues/concurrency-reset.md): Reset the concurrency limit of a queue back to its base value defined in code.
 - [List Concurrency Limits](https://trigger.dev/docs/management/concurrency-limits/list.md): List the environment's declared concurrency limits (anonymous inline limits appear under their derived `task/<task-id>` names), with each limit's bounds and its live running and queued counts. Results are ordered by the underlying row name, so named limits sort before `task/`-derived inline limits.
-- [Retrieve Concurrency Limit](https://trigger.dev/docs/management/concurrency-limits/retrieve.md): Retrieve a concurrency limit by name, with its bounds and live running and queued counts.
+- [Retrieve Concurrency Limit](https://trigger.dev/docs/management/concurrency-limits/retrieve.md): Retrieve a concurrency limit by name, with its bounds and live running and queued counts. With the concurrencyKey query parameter, retrieve the limit's view for that one key instead (its per-key bound, any per-key override and when it expires, and the runs executing for the key).
 - [Pause or Resume Concurrency Limit](https://trigger.dev/docs/management/concurrency-limits/pause.md): Pause a concurrency limit to prevent runs holding it from starting, or resume a paused limit. Runs that are currently executing will continue to completion, and the limit's configured bounds are kept.
 - [Override Concurrency Limit](https://trigger.dev/docs/management/concurrency-limits/override.md): Override a concurrency limit's bounds. Only the given fields change; the declared values are kept and restored by reset. To stop runs holding a limit, prefer the pause endpoint (it keeps the configured bounds); overriding `total` to `0` also blocks every run holding the limit.
-- [Reset Concurrency Limit](https://trigger.dev/docs/management/concurrency-limits/reset.md): Reset a concurrency limit back to the values declared in your code, clearing any override.
+- [Reset Concurrency Limit](https://trigger.dev/docs/management/concurrency-limits/reset.md): Reset a concurrency limit back to the values declared in your code, clearing any override. With a concurrencyKey in the body, clear that key's per-key override instead and leave the limit itself alone.
 - [List Schedules](https://trigger.dev/docs/management/schedules/list.md): List all schedules. You can also paginate the results.
 - [Create Schedule](https://trigger.dev/docs/management/schedules/create.md): Create a new `IMPERATIVE` schedule based on the specified options.
 - [Retrieve Schedule](https://trigger.dev/docs/management/schedules/retrieve.md): Get a schedule by its ID.
