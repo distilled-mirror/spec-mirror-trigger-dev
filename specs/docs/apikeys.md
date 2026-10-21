@@ -8,10 +8,10 @@
 
 **API keys authenticate backend requests to a specific Trigger.dev project and environment.** Each environment can have multiple keys, with optional scopes and restrictions attached.
 
-<Warning>
-  API keys grant access to your Trigger.dev environment. Store them in a secret manager or backend
-  environment variable, never commit them to source control, and never expose them in frontend code.
-</Warning>
+> [!WARNING]
+>
+> API keys grant access to your Trigger.dev environment. Store them in a secret manager or backend
+> environment variable, never commit them to source control, and never expose them in frontend code.
 
 ## Create an API key
 
@@ -19,31 +19,29 @@ Create a separate named key for each service or integration that accesses Trigge
 
 API keys belong to one environment. A Development key cannot access Production, and a Production key cannot access Staging. Every team member has their own Development environment, so create local-development keys in your own environment.
 
-<Note>
-  Creating and revoking keys requires permission to manage API keys for the selected environment.
-  The dashboard disables these actions when your role does not have permission.
-</Note>
+> [!NOTE]
+>
+> Creating and revoking keys requires permission to manage API keys for the selected environment.
+> The dashboard disables these actions when your role does not have permission.
 
-<Steps titleSize="h3">
-  <Step title="Open the API keys page">
-    Select the project and environment the integration needs to access, then open [**API keys**](https://cloud.trigger.dev/_/apikeys).
-  </Step>
+### 1. Open the API keys page
 
-  <Step title="Create the key">
-    Click **New API key**, enter a descriptive name, and optionally set an expiration date. Names can
-    contain up to 64 characters.
-  </Step>
+Select the project and environment the integration needs to access, then open [**API keys**](https://cloud.trigger.dev/_/apikeys).
 
-  <Step title="Choose its access">
-    Select the narrowest access preset that supports the integration. For task-aware presets, choose
-    all tasks or up to 10 task identifiers.
-  </Step>
+### 2. Create the key
 
-  <Step title="Copy and store the secret">
-    Copy the key into your secret manager or backend environment. Trigger.dev shows the complete
-    value only once.
-  </Step>
-</Steps>
+Click **New API key**, enter a descriptive name, and optionally set an expiration date. Names can
+contain up to 64 characters.
+
+### 3. Choose its access
+
+Select the narrowest access preset that supports the integration. For task-aware presets, choose
+all tasks or up to 10 task identifiers.
+
+### 4. Copy and store the secret
+
+Copy the key into your secret manager or backend environment. Trigger.dev shows the complete
+value only once.
 
 ## Configure the SDK
 
@@ -87,8 +85,10 @@ Access presets define what a key can do. On the Free and Hobby plans only the **
 | - | - |
 | **Trigger only** | Trigger runs and batches for all or selected tasks. Trigger responses include scoped public access tokens for the runs and batches they create |
 | **Task operator** | Trigger all or selected tasks and inspect or operate on their runs |
-| **Observer** | Read runs, tasks, batches, logs, traces, and queues |
-| **Operator** | Observe and operate on runs and queues, and trigger tasks |
+| **Observer** | Read runs, tasks, batches, logs, traces, queues, errors, and webhooks |
+| **Operator** | Observe and operate on runs, queues, errors, and webhooks, and trigger tasks |
+| **Webhooks only** | Read and write [webhooks](/docs/webhooks/overview), which are in private beta. Replaying deliveries that trigger tasks and creating webhook waiters require task or waitpoint scopes |
+| **Waitpoints only** | Create, list, and retrieve [waitpoint tokens](/docs/wait-for-token). No task or run access |
 | **Deploy only** | Deploy versions, sync environment variables, and manage Preview branches |
 | **Variables only** | Read and write environment variables in this environment |
 | **No restrictions** | Full access to the environment |
@@ -99,19 +99,17 @@ Access presets define what a key can do. On the Free and Hobby plans only the **
 
 Set a key in `TRIGGER_ACCESS_TOKEN` to authenticate `trigger deploy` without logging in.
 
-<CodeGroup>
-  ```bash npm theme={"theme":"css-variables"}
-  TRIGGER_ACCESS_TOKEN="tr_prod_sk_…" npx trigger.dev@latest deploy
-  ```
-</CodeGroup>
+```bash npm theme={"theme":"css-variables"}
+TRIGGER_ACCESS_TOKEN="tr_prod_sk_…" npx trigger.dev@latest deploy --env prod
+```
 
-The key must belong to the target environment. Use a Production key for the default deployment, a Staging key with `--env staging`, or a key from the Preview environment with `--env preview`. A Preview deployment key can create and archive Preview branches and sync their environment variables.
+The key must belong to the target environment. Use a Production key with `--env prod`, a Staging key with `--env staging`, or a key from the Preview environment with `--env preview`. If you leave out `--env`, the CLI deploys to the key's environment, and a `--env` that doesn't match the key is an error. A Preview deployment key can create and archive Preview branches and sync their environment variables.
 
-<Note>
-  The deploy CLI reads environment API keys from `TRIGGER_ACCESS_TOKEN`, not
-  `TRIGGER_SECRET_KEY`. Setting an API key in `TRIGGER_ACCESS_TOKEN` takes precedence over a saved
-  CLI login.
-</Note>
+> [!NOTE]
+>
+> The deploy CLI reads environment API keys from `TRIGGER_ACCESS_TOKEN`, not
+> `TRIGGER_SECRET_KEY`. Setting an API key in `TRIGGER_ACCESS_TOKEN` takes precedence over a saved
+> CLI login.
 
 ## Expire and revoke keys
 
@@ -131,9 +129,9 @@ Use `@trigger.dev/sdk` version 4.5.8 or later to create public tokens with envir
 * Its scopes cannot exceed the key's access.
 * Its expiration cannot exceed 30 days (the default is 15 minutes).
 
-<Note>
-  Revoking or expiring an API key does not revoke tokens it already created. Those tokens remain valid until their own expiration.
-</Note>
+> [!NOTE]
+>
+> Revoking or expiring an API key does not revoke tokens it already created. Those tokens remain valid until their own expiration.
 
 ## Target Preview and Development branches
 
@@ -163,15 +161,13 @@ Keep your instance and SDK current before creating keys. Calling a public-token 
 
 ## Next steps
 
-<CardGroup cols={2}>
-  <Card title="Trigger tasks" icon="bolt" href="/docs/triggering">
-    Trigger tasks from your backend with an environment API key.
-  </Card>
+> **[Trigger tasks](/docs/triggering)**
+>
+> Trigger tasks from your backend with an environment API key.
 
-  <Card title="Realtime authentication" icon="key" href="/docs/realtime/auth">
-    Create scoped public tokens for frontend and realtime access.
-  </Card>
-</CardGroup>
+> **[Realtime authentication](/docs/realtime/auth)**
+>
+> Create scoped public tokens for frontend and realtime access.
 
 
 This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

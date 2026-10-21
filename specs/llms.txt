@@ -82,6 +82,7 @@
 - [OOM resilience](https://trigger.dev/docs/ai-chat/patterns/oom-resilience.md): Recover from out-of-memory errors mid-turn by automatically retrying the failed turn on a larger machine — without losing the in-flight user message or re-processing completed turns.
 - [Recovery boot](https://trigger.dev/docs/ai-chat/patterns/recovery-boot.md): Recover from cancel-mid-stream, crashes, and OOM kills with full conversational context. The smart default Just Works; the onRecoveryBoot hook is the override path for advanced policies.
 - [Trusted edge signals](https://trigger.dev/docs/ai-chat/patterns/trusted-edge-signals.md): How to safely deliver server-trusted signals (bot scores, JA4, ASN, ReCAPTCHA verdicts) to a chat.agent run via an edge proxy.
+- [Redact chat content from traces](https://trigger.dev/docs/ai-chat/patterns/redacting-telemetry.md): Stop a chat agent recording user messages and clientData on its spans, turn off AI SDK prompt and response recording, or redact span content with a span processor before it leaves the worker.
 - [Native compaction & provider fallback](https://trigger.dev/docs/ai-chat/patterns/native-compaction.md): Persist provider-native compaction (Anthropic context editing, OpenAI stored responses) across chat.agent turns so history is never re-sent, and fall back between providers without losing the conversation.
 - [API Reference](https://trigger.dev/docs/ai-chat/reference.md): Complete API reference for the AI Agents SDK — backend options, events, frontend transport, and hooks.
 - [Client Protocol](https://trigger.dev/docs/ai-chat/client-protocol.md): The wire protocol for building custom chat transports — how clients communicate with chat agents over Sessions and SSE.
@@ -97,7 +98,7 @@
 - [Waiting for a webhook](https://trigger.dev/docs/webhooks/waiters.md): Pause a run until a matching webhook arrives on an endpoint, then resume it with the verified event.
 - [Routing to a session](https://trigger.dev/docs/webhooks/session-routing.md): Route verified webhook deliveries to a durable per-key session instead of a fresh run.
 - [Channels (chat frontends)](https://trigger.dev/docs/webhooks/channels.md): Point Slack (or any chat surface) at an agent: messages become turns and replies post back.
-- [Slack agents](https://trigger.dev/docs/webhooks/slack.md): Turn a chat.agent into a Slack agent: users message it in Slack, it shows its status while it works, streams its reply with tool calls as task cards, asks for approvals, and stops on Slack's stop button.
+- [Slack agents](https://trigger.dev/docs/webhooks/slack.md): Turn a chat.agent into a Slack agent: users message it in Slack, it shows its status while it works, streams its reply with its tool calls as a plan, asks for approvals, and stops on Slack's stop button.
 - [Linear agents](https://trigger.dev/docs/webhooks/linear.md): Turn a chat.agent into a Linear agent: assign it an issue or @mention it, and it works the issue inside Linear's agent session UI.
 - [Human-in-the-loop](https://trigger.dev/docs/webhooks/human-in-the-loop.md): Pause an agent mid-turn to get a human decision from the channel (Slack approve/deny), then resume with the answer.
 - [The trigger.config.ts file](https://trigger.dev/docs/config/config-file.md): This file is used to configure your project and how it's built.
@@ -155,6 +156,7 @@
 - [CLI promote command](https://trigger.dev/docs/cli-promote-commands.md): Use the promote command to promote a previously deployed version to the current version.
 - [CLI runs commands](https://trigger.dev/docs/cli-runs-commands.md): Use these commands to list, inspect, replay and cancel runs from your terminal.
 - [CLI switch command](https://trigger.dev/docs/cli-switch.md): The `trigger.dev switch` command can be used to switch between profiles.
+- [CLI tasks commands](https://trigger.dev/docs/cli-tasks-commands.md): Use these commands to trigger tasks from your terminal.
 - [CLI update command](https://trigger.dev/docs/cli-update-commands.md): Use these options when using the `update` CLI command.
 - [CLI whoami command](https://trigger.dev/docs/cli-whoami-commands.md): Use these options to display the current logged in user and project details.
 - [Query](https://trigger.dev/docs/observability/query.md): Query allows you to write custom queries against your data using TRQL (Trigger.dev Query Language), a SQL-style language based on ClickHouse SQL. You can query your data through the dashboard, SDK, or REST API.
@@ -271,7 +273,15 @@
 - [Session channels](https://trigger.dev/docs/management/sessions/channels.md): The raw HTTP endpoints behind a session's .in and .out streams: append records, read them over SSE, and drain them non-streaming.
 - [Execute a query](https://trigger.dev/docs/management/query/execute.md): Execute a TRQL (Trigger.dev Query Language) query against your run data. TRQL is a SQL-style query language that allows you to analyze runs, calculate metrics, and export data.
 - [Get query schema](https://trigger.dev/docs/management/query/schema.md): Get the schema for TRQL queries, including all available tables, their columns, data types, descriptions, and allowed values.
-- [List dashboards](https://trigger.dev/docs/management/query/dashboards.md): List available built-in dashboards with their widgets. Each dashboard contains pre-built TRQL queries for common metrics like run success rates, costs, and LLM usage.
+- [List dashboards](https://trigger.dev/docs/management/query/dashboards.md): List the built-in dashboards and your organization's custom dashboards, with their widgets. Built-in dashboards contain pre-built TRQL queries for common metrics like run success rates, costs, and LLM usage.
+- [Create dashboard](https://trigger.dev/docs/management/query/create-dashboard.md): Create a custom dashboard, optionally with its widgets. Every widget query is checked against the queryable tables before it is saved. Creating more dashboards than your plan allows returns a 403.
+- [Retrieve dashboard](https://trigger.dev/docs/management/query/retrieve-dashboard.md): Retrieve a custom dashboard with every widget, its query, display and grid position.
+- [Update dashboard](https://trigger.dev/docs/management/query/update-dashboard.md): Rename a custom dashboard or change its description.
+- [Replace dashboard widgets](https://trigger.dev/docs/management/query/replace-dashboard.md): Replace every widget on a custom dashboard, and optionally its title and description. A widget that already exists keeps its position unless you pass a new one; new widgets without a position are stacked full width below the others, in order.
+- [Delete dashboard](https://trigger.dev/docs/management/query/delete-dashboard.md): Delete a custom dashboard.
+- [Add dashboard widget](https://trigger.dev/docs/management/query/add-dashboard-widget.md): Add a widget to a custom dashboard. Without a position it is placed full width at the bottom.
+- [Update dashboard widget](https://trigger.dev/docs/management/query/update-dashboard-widget.md): Change a widget's title, query, display or position.
+- [Delete dashboard widget](https://trigger.dev/docs/management/query/delete-dashboard-widget.md): Remove a widget from a custom dashboard.
 - [Frameworks, guides and examples](https://trigger.dev/docs/guides/introduction.md): A growing list of guides and examples to get the most out of Trigger.dev.
 - [Bun guide](https://trigger.dev/docs/guides/frameworks/bun.md): This guide will show you how to setup Trigger.dev in your existing Bun project, test an example task, and view the run.
 - [Next.js setup guide](https://trigger.dev/docs/guides/frameworks/nextjs.md): This guide will show you how to setup Trigger.dev in your existing Next.js project, test an example task, and view the run.
@@ -315,6 +325,7 @@
 - [ClickHouse chat agent](https://trigger.dev/docs/guides/example-projects/clickhouse-chat-agent.md): Build a chat agent that answers questions about your ClickHouse data with charts, tables and maps instead of text, using chat.agent(), generative UI with json-render, and a Next.js frontend.
 - [Background Cursor agent using the Cursor CLI](https://trigger.dev/docs/guides/example-projects/cursor-background-agent.md): Run Cursor's headless CLI agent in a Trigger.dev task and stream the live output to the frontend using Trigger.dev Realtime Streams.
 - [ElevenLabs Voice agent](https://trigger.dev/docs/guides/example-projects/elevenlabs-voice-agent.md): Build a spoken-conversation voice assistant on a Trigger.dev chat agent, with streaming speech-to-text and text-to-speech from ElevenLabs, server-side voice activity detection, and Head Start for a fast first reply.
+- [Grok AI Teammates: chat agents with their own cloud computer](https://trigger.dev/docs/guides/example-projects/grok-ai-teammates.md): An open-source Grok Bot alternative by Code With Antonio. Each AI teammate gets its own Linux sandbox and desktop, runs durable chat turns on Trigger.dev chat.agent(), hands off work in group chats, and meters usage with a scheduled task.
 - [Human-in-the-loop workflow with ReactFlow and Trigger.dev waitpoint tokens](https://trigger.dev/docs/guides/example-projects/human-in-the-loop-workflow.md): This example project creates audio summaries of newspaper articles using a human-in-the-loop workflow built with ReactFlow and Trigger.dev waitpoint tokens.
 - [Mastra agents with memory sharing + Trigger.dev task orchestration](https://trigger.dev/docs/guides/example-projects/mastra-agents-with-memory.md): Multi-agent workflow with persistent memory sharing using Mastra and Trigger.dev for clothing recommendations based on weather data.
 - [Meme generator with human-in-the-loop approval](https://trigger.dev/docs/guides/example-projects/meme-generator-human-in-the-loop.md): This example project creates memes using OpenAI's DALL-E 3 with a human-in-the-loop approval workflow built using Trigger.dev waitpoint tokens.

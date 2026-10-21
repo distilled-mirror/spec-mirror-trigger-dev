@@ -10,19 +10,17 @@
 
 The management API is available through the same `@trigger.dev/sdk` package used in defining and triggering tasks. If you have already installed the package in your project, you can skip this step.
 
-<CodeGroup>
-  ```bash npm theme={"theme":"css-variables"}
-  npm i @trigger.dev/sdk@latest
-  ```
+```bash npm theme={"theme":"css-variables"}
+npm i @trigger.dev/sdk@latest
+```
 
-  ```bash pnpm theme={"theme":"css-variables"}
-  pnpm add @trigger.dev/sdk@latest
-  ```
+```bash pnpm theme={"theme":"css-variables"}
+pnpm add @trigger.dev/sdk@latest
+```
 
-  ```bash yarn theme={"theme":"css-variables"}
-  yarn add @trigger.dev/sdk@latest
-  ```
-</CodeGroup>
+```bash yarn theme={"theme":"css-variables"}
+yarn add @trigger.dev/sdk@latest
+```
 
 ## Usage
 

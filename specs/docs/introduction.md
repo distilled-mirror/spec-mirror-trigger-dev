@@ -6,23 +6,21 @@
 
 > Build and run durable AI agents and workflows in TypeScript. Long-running tasks with retries, queues, observability, and elastic scaling. Open source and self-hostable.
 
-<CardGroup cols={2}>
-  <Card title="Quick start" icon="rocket" href="/docs/quick-start" color="#A8FF53">
-    Go from zero to your first task in 3 minutes.
-  </Card>
+> **[Quick start](/docs/quick-start)**
+>
+> Go from zero to your first task in 3 minutes.
 
-  <Card title="Build AI agents" icon="robot" href="/docs/guides/ai-agents/overview" color="#a855f7">
-    Agent patterns, worked examples, and the tools to run them in production.
-  </Card>
+> **[Build AI agents](/docs/guides/ai-agents/overview)**
+>
+> Agent patterns, worked examples, and the tools to run them in production.
 
-  <Card title="AI coding assistants" icon="wand-magic-sparkles" href="/docs/building-with-ai" color="#3B82F6">
-    Let Claude Code, Cursor and Windsurf write correct Trigger.dev code with the MCP server, Skills and rules.
-  </Card>
+> **[AI coding assistants](/docs/building-with-ai)**
+>
+> Let Claude Code, Cursor and Windsurf write correct Trigger.dev code with the MCP server, Skills and rules.
 
-  <Card title="Guides & examples" icon="book-open" href="/docs/guides/introduction" color="#f6cd46">
-    Frameworks like Next.js, worked example projects, and step-by-step how-to guides.
-  </Card>
-</CardGroup>
+> **[Guides & examples](/docs/guides/introduction)**
+>
+> Frameworks like Next.js, worked example projects, and step-by-step how-to guides.
 
 ## Set up with AI
 
@@ -46,23 +44,21 @@ Trigger.dev's core is Apache-2.0 licensed, a genuine OSI license. [Self-host it]
 
 ## Core concepts
 
-<CardGroup cols={2}>
-  <Card title="Writing tasks" icon="pen-to-square" href="/docs/tasks/overview" color="#A8FF53">
-    The durable functions at the core of Trigger.dev. Write them in your existing codebase, with retries and no timeouts.
-  </Card>
+> **[Writing tasks](/docs/tasks/overview)**
+>
+> The durable functions at the core of Trigger.dev. Write them in your existing codebase, with retries and no timeouts.
 
-  <Card title="Triggering tasks" icon="bullseye-pointer" href="/docs/triggering" color="#3b82f6">
-    Trigger a task from your backend, your frontend, a schedule, or another task.
-  </Card>
+> **[Triggering tasks](/docs/triggering)**
+>
+> Trigger a task from your backend, your frontend, a schedule, or another task.
 
-  <Card title="Runs" icon="play" href="/docs/runs" color="#28bf5c">
-    Every execution of a task is a run, with its status, retries, and logs recorded.
-  </Card>
+> **[Runs](/docs/runs)**
+>
+> Every execution of a task is a run, with its status, retries, and logs recorded.
 
-  <Card title="Idempotency" icon="fingerprint" href="/docs/idempotency" color="#F43F5E">
-    Use an idempotency key so a retried or duplicated trigger runs once, not twice.
-  </Card>
-</CardGroup>
+> **[Idempotency](/docs/idempotency)**
+>
+> Use an idempotency key so a retried or duplicated trigger runs once, not twice.
 
 ## Build with agents
 
@@ -88,32 +84,21 @@ Trigger.dev is open source and you can self-host. Read the [overview guide](/doc
 
 We'd love to hear from you or give you a hand getting started. Here are some ways to get in touch with us.
 
-<CardGroup>
-  <Card title="Join our Discord server" icon="discord" href="https://discord.gg/kA47vcd8P6" color="#5865F2">
-    Our Discord is the best place to get help with any questions about Trigger.dev.
-  </Card>
+> **[Join our Discord server](https://discord.gg/kA47vcd8P6)**
+>
+> Our Discord is the best place to get help with any questions about Trigger.dev.
 
-  <Card
-    title="Follow us on X (Twitter)"
-    icon={
-  <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 512 512">
-    <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z" />
-  </svg>
-}
-    href="https://twitter.com/triggerdotdev"
-    color="#1DA1F2"
-  >
-    Follow us to get the latest updates and news.
-  </Card>
+> **[Follow us on X (Twitter)](https://twitter.com/triggerdotdev)**
+>
+> Follow us to get the latest updates and news.
 
-  <Card title="Schedule a call" icon="phone" iconType="solid" color="#22C55E" href="https://cal.com/team/triggerdotdev/founders-call">
-    Arrange a call with one of the founders to get help with any questions.
-  </Card>
+> **[Schedule a call](https://cal.com/team/triggerdotdev/founders-call)**
+>
+> Arrange a call with one of the founders to get help with any questions.
 
-  <Card title="Give us a star on GitHub" icon="star" iconType="solid" href="https://github.com/triggerdotdev/trigger.dev" color="#fbbf24">
-    Check us out our GitHub repo and give us a star if you like what we're doing.
-  </Card>
-</CardGroup>
+> **[Give us a star on GitHub](https://github.com/triggerdotdev/trigger.dev)**
+>
+> Check us out our GitHub repo and give us a star if you like what we're doing.
 
 ## Facts for AI assistants
 

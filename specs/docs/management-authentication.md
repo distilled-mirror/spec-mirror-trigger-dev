@@ -8,11 +8,11 @@
 
 There are two methods of authenticating with the management API: using a named API key associated with a specific environment in a project, or using a personal access token (PAT). Pass either one as the `accessToken` option (`secretKey` is a deprecated alias). Use both methods only on a backend server. An environment API key's access is limited by the preset and task restrictions selected when you create it.
 
-<Note>
-  There is a separate authentication strategy when making requests from your frontend application.
-  See the [Realtime guide](/docs/realtime/overview) for more information. This guide is for backend usage
-  only.
-</Note>
+> [!NOTE]
+>
+> There is a separate authentication strategy when making requests from your frontend application.
+> See the [Realtime guide](/docs/realtime/overview) for more information. This guide is for backend usage
+> only.
 
 Certain API functions work with both authentication methods, but require different arguments depending on the method used. For example, the `runs.list` function can be called using either an environment API key or a personal access token, but the `projectRef` argument is required when using a personal access token:
 
@@ -46,31 +46,31 @@ function personalAccessTokenExample() {
 }
 ```
 
-<Accordion title="View endpoint support">
-  Consult the following table to see which endpoints support each authentication method.
-
-  | Endpoint | Secret key | Personal Access Token |
-  | - | - | - |
-  | `task.trigger` | ✅ | |
-  | `task.batchTrigger` | ✅ | |
-  | `runs.list` | ✅ | ✅ |
-  | `runs.retrieve` | ✅ | |
-  | `runs.cancel` | ✅ | |
-  | `runs.replay` | ✅ | |
-  | `envvars.list` | ✅ | ✅ |
-  | `envvars.retrieve` | ✅ | ✅ |
-  | `envvars.upload` | ✅ | ✅ |
-  | `envvars.create` | ✅ | ✅ |
-  | `envvars.update` | ✅ | ✅ |
-  | `envvars.del` | ✅ | ✅ |
-  | `schedules.list` | ✅ | |
-  | `schedules.create` | ✅ | |
-  | `schedules.retrieve` | ✅ | |
-  | `schedules.update` | ✅ | |
-  | `schedules.activate` | ✅ | |
-  | `schedules.deactivate` | ✅ | |
-  | `schedules.del` | ✅ | |
-</Accordion>
+> **View endpoint support**
+>
+> Consult the following table to see which endpoints support each authentication method.
+>
+> | Endpoint | Secret key | Personal Access Token |
+> | - | - | - |
+> | `task.trigger` | ✅ | |
+> | `task.batchTrigger` | ✅ | |
+> | `runs.list` | ✅ | ✅ |
+> | `runs.retrieve` | ✅ | |
+> | `runs.cancel` | ✅ | |
+> | `runs.replay` | ✅ | |
+> | `envvars.list` | ✅ | ✅ |
+> | `envvars.retrieve` | ✅ | ✅ |
+> | `envvars.upload` | ✅ | ✅ |
+> | `envvars.create` | ✅ | ✅ |
+> | `envvars.update` | ✅ | ✅ |
+> | `envvars.del` | ✅ | ✅ |
+> | `schedules.list` | ✅ | |
+> | `schedules.create` | ✅ | |
+> | `schedules.retrieve` | ✅ | |
+> | `schedules.update` | ✅ | |
+> | `schedules.activate` | ✅ | |
+> | `schedules.deactivate` | ✅ | |
+> | `schedules.del` | ✅ | |
 
 ### Environment API key
 
@@ -101,46 +101,44 @@ await envvars.upload("proj_1234", "dev", {
 
 When working with preview branches, you may need to target a specific branch when making API calls. This is particularly useful for managing environment variables or other resources that are scoped to individual preview branches.
 
-<Tabs>
-  <Tab title="SDK">
-    To target a specific preview branch, include the `previewBranch` option in your SDK configuration:
+**SDK**
 
-    ```ts theme={"theme":"css-variables"}
-    import { configure, envvars } from "@trigger.dev/sdk";
+To target a specific preview branch, include the `previewBranch` option in your SDK configuration:
 
-    configure({
-      accessToken: process.env["TRIGGER_ACCESS_TOKEN"], // starts with tr_pat_
-      previewBranch: "feature-xyz",
-    });
+```ts theme={"theme":"css-variables"}
+import { configure, envvars } from "@trigger.dev/sdk";
 
-    await envvars.update("proj_1234", "preview", "DATABASE_URL", {
-      value: "your_preview_database_url",
-    });
-    ```
-  </Tab>
+configure({
+  accessToken: process.env["TRIGGER_ACCESS_TOKEN"], // starts with tr_pat_
+  previewBranch: "feature-xyz",
+});
 
-  <Tab title="cURL">
-    To target a specific preview or development branch, include the `x-trigger-branch` header in your API requests with the branch name as the value:
+await envvars.update("proj_1234", "preview", "DATABASE_URL", {
+  value: "your_preview_database_url",
+});
+```
 
-    ```bash theme={"theme":"css-variables"}
-    curl --request PUT \
-      --url https://api.trigger.dev/api/v1/projects/{projectRef}/envvars/preview/DATABASE_URL \
-      --header 'Authorization: Bearer <token>' \
-      --header 'x-trigger-branch: feature-xyz' \
-      --header 'Content-Type: application/json' \
-      --data '{
-        "value": "your_preview_database_url"
-      }'
-    ```
-  </Tab>
-</Tabs>
+**cURL**
+
+To target a specific preview or development branch, include the `x-trigger-branch` header in your API requests with the branch name as the value:
+
+```bash theme={"theme":"css-variables"}
+curl --request PUT \
+  --url https://api.trigger.dev/api/v1/projects/{projectRef}/envvars/preview/DATABASE_URL \
+  --header 'Authorization: Bearer <token>' \
+  --header 'x-trigger-branch: feature-xyz' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "value": "your_preview_database_url"
+  }'
+```
 
 This will set the `DATABASE_URL` environment variable specifically for the `feature-xyz` preview branch.
 
-<Note>
-  The `x-trigger-branch` header is only relevant when working with the `preview` or `dev` environments (`{env}` parameter set to `preview` or `dev`). It has no effect when working with `staging`, or `prod`
-  environments.
-</Note>
+> [!NOTE]
+>
+> The `x-trigger-branch` header is only relevant when working with the `preview` or `dev` environments (`{env}` parameter set to `preview` or `dev`). It has no effect when working with `staging`, or `prod`
+> environments.
 
 #### SDK usage with preview branches
 
@@ -183,12 +181,12 @@ The override is scoped via [AsyncLocalStorage](https://nodejs.org/api/async_cont
 
 Unlike `TriggerClient` instances (which stay isolated unless you opt in), `auth.withAuth` keeps the surrounding task context: a call made inside a task still inherits `parentRunId`, version locking, and the test flag, the same as a direct SDK call. See the [isolation contract](/docs/management/multiple-clients#isolation-contract).
 
-<Note>
-  On runtimes without AsyncLocalStorage (browsers and some edge runtimes), the SDK falls back to
-  swapping the global config in place for the duration of the callback, which is not safe under
-  concurrency. If you need concurrent multi-target calls there, use
-  [`new TriggerClient({...})`](/docs/management/multiple-clients) instances instead.
-</Note>
+> [!NOTE]
+>
+> On runtimes without AsyncLocalStorage (browsers and some edge runtimes), the SDK falls back to
+> swapping the global config in place for the duration of the callback, which is not safe under
+> concurrency. If you need concurrent multi-target calls there, use
+> [`new TriggerClient({...})`](/docs/management/multiple-clients) instances instead.
 
 ## Session scopes
 
