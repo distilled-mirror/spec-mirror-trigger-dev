@@ -46,7 +46,7 @@ main().catch(console.error);
 
 ### Multiple clients in one process
 
-If a single process needs to talk to more than one Trigger.dev project, environment, or preview branch, use `new TriggerClient({...})` for each target instead of `configure()`. Each instance owns its own auth and config, with no shared global state. See [Multiple SDK clients](/docs/management/multiple-clients) for the full pattern.
+If a single process needs to talk to more than one Trigger.dev project, environment, or preview branch, use `new TriggerClient({...})` for each target instead of `configure()`. Each instance owns its own auth and config, with no shared global state. See [Multiple SDK clients](/docs/management/multiple-clients.md) for the full pattern.
 
 ```ts theme={"theme":"css-variables"}
 import { TriggerClient } from "@trigger.dev/sdk";

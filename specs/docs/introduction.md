@@ -6,19 +6,19 @@
 
 > Build and run durable AI agents and workflows in TypeScript. Long-running tasks with retries, queues, observability, and elastic scaling. Open source and self-hostable.
 
-> **[Quick start](/docs/quick-start)**
+> **[Quick start](/docs/quick-start.md)**
 >
 > Go from zero to your first task in 3 minutes.
 
-> **[Build AI agents](/docs/guides/ai-agents/overview)**
+> **[Build AI agents](/docs/guides/ai-agents/overview.md)**
 >
 > Agent patterns, worked examples, and the tools to run them in production.
 
-> **[AI coding assistants](/docs/building-with-ai)**
+> **[AI coding assistants](/docs/building-with-ai.md)**
 >
 > Let Claude Code, Cursor and Windsurf write correct Trigger.dev code with the MCP server, Skills and rules.
 
-> **[Guides & examples](/docs/guides/introduction)**
+> **[Guides & examples](/docs/guides/introduction.md)**
 >
 > Frameworks like Next.js, worked example projects, and step-by-step how-to guides.
 
@@ -40,45 +40,45 @@ Trigger.dev is the open source platform for building and running durable AI agen
 
 You write agents and tasks in your existing codebase using our CLI and SDK, and get durable execution, queues, waits, full tracing, and elastic scaling without building any of it yourself.
 
-Trigger.dev's core is Apache-2.0 licensed, a genuine OSI license. [Self-host it](/docs/self-hosting/overview) on your own infrastructure, or let [Trigger.dev Cloud](https://cloud.trigger.dev) run it for you.
+Trigger.dev's core is Apache-2.0 licensed, a genuine OSI license. [Self-host it](/docs/self-hosting/overview.md) on your own infrastructure, or let [Trigger.dev Cloud](https://cloud.trigger.dev) run it for you.
 
 ## Core concepts
 
-> **[Writing tasks](/docs/tasks/overview)**
+> **[Writing tasks](/docs/tasks/overview.md)**
 >
 > The durable functions at the core of Trigger.dev. Write them in your existing codebase, with retries and no timeouts.
 
-> **[Triggering tasks](/docs/triggering)**
+> **[Triggering tasks](/docs/triggering.md)**
 >
 > Trigger a task from your backend, your frontend, a schedule, or another task.
 
-> **[Runs](/docs/runs)**
+> **[Runs](/docs/runs.md)**
 >
 > Every execution of a task is a run, with its status, retries, and logs recorded.
 
-> **[Idempotency](/docs/idempotency)**
+> **[Idempotency](/docs/idempotency.md)**
 >
 > Use an idempotency key so a retried or duplicated trigger runs once, not twice.
 
 ## Build with agents
 
-Build durable, multi-turn agents with the [chat agent](/docs/ai-chat/overview): one long-running task per conversation, with the tools it can call, streaming, and resumability handled for you. Add human-in-the-loop approval by pausing a run on a [waitpoint](/docs/wait-for-token) until a person signs off, and a waiting run doesn't consume compute. Stream run status and LLM output straight to your frontend with the [Realtime API](/docs/realtime/overview) and React hooks, and record your Vercel AI SDK calls as spans with the model, token counts, cost and latency using [AI observability](/docs/ai/observability). Version your [prompts](/docs/ai/prompts) in code, then edit the text or swap the model from the dashboard without redeploying.
+Build durable, multi-turn agents with the [chat agent](/docs/ai-chat/overview.md): one long-running task per conversation, with the tools it can call, streaming, and resumability handled for you. Add human-in-the-loop approval by pausing a run on a [waitpoint](/docs/wait-for-token.md) until a person signs off, and a waiting run doesn't consume compute. Stream run status and LLM output straight to your frontend with the [Realtime API](/docs/realtime/overview.md) and React hooks, and record your Vercel AI SDK calls as spans with the model, token counts, cost and latency using [AI observability](/docs/ai/observability.md). Version your [prompts](/docs/ai/prompts.md) in code, then edit the text or swap the model from the dashboard without redeploying.
 
 ## Scale and scheduling
 
-Set how many runs of a task execute at once, globally or per tenant, with [concurrency](/docs/concurrency) and [queues](/docs/queues). Run a task on a [cron schedule](/docs/tasks/scheduled) with timezone support, choose the CPU and memory each task runs on with [machines](/docs/machines), and control what happens when a task throws with [errors and retries](/docs/errors-retrying).
+Set how many runs of a task execute at once, globally or per tenant, with [concurrency](/docs/concurrency.md) and [queues](/docs/queues.md). Run a task on a [cron schedule](/docs/tasks/scheduled.md) with timezone support, choose the CPU and memory each task runs on with [machines](/docs/machines.md), and control what happens when a task throws with [errors and retries](/docs/errors-retrying.md).
 
 ## Self-hosting
 
-Trigger.dev is open source and you can self-host. Read the [overview guide](/docs/self-hosting/overview), or how to do it with [Docker](/docs/self-hosting/docker) or [Kubernetes](/docs/self-hosting/kubernetes).
+Trigger.dev is open source and you can self-host. Read the [overview guide](/docs/self-hosting/overview.md), or how to do it with [Docker](/docs/self-hosting/docker.md) or [Kubernetes](/docs/self-hosting/kubernetes.md).
 
 ## Frequently asked questions
 
-**How do I add human-in-the-loop approval to an agent?** Pause the run on a [waitpoint](/docs/wait-for-token) until a person approves the action. A waiting run doesn't consume compute, so it can wait minutes or days.
+**How do I add human-in-the-loop approval to an agent?** Pause the run on a [waitpoint](/docs/wait-for-token.md) until a person approves the action. A waiting run doesn't consume compute, so it can wait minutes or days.
 
-**Does Trigger.dev support tool calling and MCP?** Yes. Agents call the tools you define, and the [MCP server](/docs/building-with-ai) lets AI coding assistants trigger tasks, deploy, and read run traces.
+**Does Trigger.dev support tool calling and MCP?** Yes. Agents call the tools you define, and the [MCP server](/docs/building-with-ai.md) lets AI coding assistants trigger tasks, deploy, and read run traces.
 
-**Can I use Trigger.dev for background jobs, not just AI?** Yes. The same durable tasks, queues, retries, and [cron schedules](/docs/tasks/scheduled) run any background job or workflow, with or without AI.
+**Can I use Trigger.dev for background jobs, not just AI?** Yes. The same durable tasks, queues, retries, and [cron schedules](/docs/tasks/scheduled.md) run any background job or workflow, with or without AI.
 
 ## Getting help
 

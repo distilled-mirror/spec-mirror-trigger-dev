@@ -87,8 +87,8 @@ Access presets define what a key can do. On the Free and Hobby plans only the **
 | **Task operator** | Trigger all or selected tasks and inspect or operate on their runs |
 | **Observer** | Read runs, tasks, batches, logs, traces, queues, errors, and webhooks |
 | **Operator** | Observe and operate on runs, queues, errors, and webhooks, and trigger tasks |
-| **Webhooks only** | Read and write [webhooks](/docs/webhooks/overview), which are in private beta. Replaying deliveries that trigger tasks and creating webhook waiters require task or waitpoint scopes |
-| **Waitpoints only** | Create, list, and retrieve [waitpoint tokens](/docs/wait-for-token). No task or run access |
+| **Webhooks only** | Read and write [webhooks](/docs/webhooks/overview.md), which are in private beta. Replaying deliveries that trigger tasks and creating webhook waiters require task or waitpoint scopes |
+| **Waitpoints only** | Create, list, and retrieve [waitpoint tokens](/docs/wait-for-token.md). No task or run access |
 | **Deploy only** | Deploy versions, sync environment variables, and manage Preview branches |
 | **Variables only** | Read and write environment variables in this environment |
 | **No restrictions** | Full access to the environment |
@@ -121,7 +121,7 @@ Removing a team member does not revoke keys they created. Review and revoke thei
 
 ## Create public access tokens
 
-API keys can be used to create scoped [Public Access Tokens](/docs/realtime/auth) using `auth.createPublicToken()`.
+API keys can be used to create scoped [Public Access Tokens](/docs/realtime/auth.md) using `auth.createPublicToken()`.
 
 Use `@trigger.dev/sdk` version 4.5.8 or later to create public tokens with environment API keys. Public tokens have the following restrictions:
 
@@ -157,15 +157,15 @@ Keep your instance and SDK current before creating keys. Calling a public-token 
 * Store keys in a secret manager and inject them as backend environment variables.
 * Set expiration dates for temporary integrations and deployment credentials.
 * Revoke keys when an integration or team member no longer needs access.
-* Never put an API key in frontend code. Use scoped [Public Access Tokens](/docs/realtime/auth) for client-side access.
+* Never put an API key in frontend code. Use scoped [Public Access Tokens](/docs/realtime/auth.md) for client-side access.
 
 ## Next steps
 
-> **[Trigger tasks](/docs/triggering)**
+> **[Trigger tasks](/docs/triggering.md)**
 >
 > Trigger tasks from your backend with an environment API key.
 
-> **[Realtime authentication](/docs/realtime/auth)**
+> **[Realtime authentication](/docs/realtime/auth.md)**
 >
 > Create scoped public tokens for frontend and realtime access.
 
