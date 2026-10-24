@@ -11,7 +11,7 @@ There are two methods of authenticating with the management API: using a named A
 > [!NOTE]
 >
 > There is a separate authentication strategy when making requests from your frontend application.
-> See the [Realtime guide](/docs/realtime/overview.md) for more information. This guide is for backend usage
+> See the [Realtime guide](https://trigger.dev/docs/realtime/overview.md) for more information. This guide is for backend usage
 > only.
 
 Certain API functions work with both authentication methods, but require different arguments depending on the method used. For example, the `runs.list` function can be called using either an environment API key or a personal access token, but the `projectRef` argument is required when using a personal access token:
@@ -74,7 +74,7 @@ function personalAccessTokenExample() {
 
 ### Environment API key
 
-Create a named environment API key with the narrowest access preset that supports your integration. Pass it through the `accessToken` option or `TRIGGER_SECRET_KEY` environment variable. Read the [API Keys guide](/docs/apikeys.md) for available presets and task restrictions.
+Create a named environment API key with the narrowest access preset that supports your integration. Pass it through the `accessToken` option or `TRIGGER_SECRET_KEY` environment variable. Read the [API Keys guide](https://trigger.dev/docs/apikeys.md) for available presets and task restrictions.
 
 ### Personal Access Token (PAT)
 
@@ -161,7 +161,7 @@ await envvars.update("proj_1234", "preview", "DATABASE_URL", {
 
 A long-running process often needs to talk to more than one Trigger.dev target. There are two patterns:
 
-* **`new TriggerClient({...})`** — an explicit instance that owns its own auth, baseURL, and preview branch. Use this when the targets are long-lived (a dashboard that watches prod + preview, a worker that triggers across multiple projects, etc.). Each instance is fully isolated and concurrent calls don't interfere. See [Multiple SDK clients](/docs/management/multiple-clients.md) for details.
+* **`new TriggerClient({...})`** — an explicit instance that owns its own auth, baseURL, and preview branch. Use this when the targets are long-lived (a dashboard that watches prod + preview, a worker that triggers across multiple projects, etc.). Each instance is fully isolated and concurrent calls don't interfere. See [Multiple SDK clients](https://trigger.dev/docs/management/multiple-clients.md) for details.
 * **`auth.withAuth(config, fn)`** — runs a single callback under a temporary config override, then restores. Use this for short, sequential overrides (e.g. one batch under a different token) where keeping a dedicated client around is overkill.
 
 ```ts theme={"theme":"css-variables"}
@@ -179,22 +179,22 @@ Any SDK call inside the callback uses the overridden config. Calls outside the c
 
 The override is scoped via [AsyncLocalStorage](https://nodejs.org/api/async_context.html), so concurrent `auth.withAuth` calls (including overlapping calls inside `Promise.all` with different tokens) do not interfere. Nested calls compose — an inner `auth.withAuth({ accessToken })` inside an outer `auth.withAuth({ baseURL })` runs with both fields applied.
 
-Unlike `TriggerClient` instances (which stay isolated unless you opt in), `auth.withAuth` keeps the surrounding task context: a call made inside a task still inherits `parentRunId`, version locking, and the test flag, the same as a direct SDK call. See the [isolation contract](/docs/management/multiple-clients.md#isolation-contract).
+Unlike `TriggerClient` instances (which stay isolated unless you opt in), `auth.withAuth` keeps the surrounding task context: a call made inside a task still inherits `parentRunId`, version locking, and the test flag, the same as a direct SDK call. See the [isolation contract](https://trigger.dev/docs/management/multiple-clients.md#isolation-contract).
 
 > [!NOTE]
 >
 > On runtimes without AsyncLocalStorage (browsers and some edge runtimes), the SDK falls back to
 > swapping the global config in place for the duration of the callback, which is not safe under
 > concurrency. If you need concurrent multi-target calls there, use
-> [`new TriggerClient({...})`](/docs/management/multiple-clients) instances instead.
+> [`new TriggerClient({...})`](https://trigger.dev/docs/management/multiple-clients) instances instead.
 
 ## Session scopes
 
-[Sessions](/docs/ai-chat/sessions.md) are addressed by a session-scoped public access token — a short-lived JWT you mint in your backend and pass to frontend or server-side clients. The token carries one or both of two scopes, each pinned to a session by its friendly ID (`session_…`) or your `externalId`:
+[Sessions](https://trigger.dev/docs/ai-chat/sessions.md) are addressed by a session-scoped public access token — a short-lived JWT you mint in your backend and pass to frontend or server-side clients. The token carries one or both of two scopes, each pinned to a session by its friendly ID (`session_…`) or your `externalId`:
 
 | Scope | Grants |
 | - | - |
-| `read:sessions:{id}` | Retrieve the session, list its runs, and subscribe to and drain its `.out` [channel](/docs/management/sessions/channels.md) (and every named channel). |
+| `read:sessions:{id}` | Retrieve the session, list its runs, and subscribe to and drain its `.out` [channel](https://trigger.dev/docs/management/sessions/channels.md) (and every named channel). |
 | `read:sessions:{id}:out` | Subscribe to and drain the session's `.out` channel only. The bearer cannot retrieve the session row or read named channels. |
 | `write:sessions:{id}` | Append to the session's `.in` channel, and create runs on the session (including the create call itself). |
 
@@ -219,9 +219,9 @@ const publicToken = await auth.createPublicToken({
 
 `sessions` accepts a single ID or an array. When you mint the token with `auth.createPublicToken()`, the default TTL is 15 minutes (pass `expirationTime` to change it). Tokens returned by `sessions.start()` default to 1 hour. One token authorizes **both** URL forms — pass either your `externalId` or the `session_…` ID in the path.
 
-The `publicAccessToken` returned by [`sessions.start()`](/docs/management/sessions/create) already carries both scopes for the session it created, so you usually don't mint one by hand for the create flow.
+The `publicAccessToken` returned by [`sessions.start()`](https://trigger.dev/docs/management/sessions/create) already carries both scopes for the session it created, so you usually don't mint one by hand for the create flow.
 
-For the full channel HTTP surface these scopes authorize, see [Session channels](/docs/management/sessions/channels.md). For the SDK side, see [Sessions](/docs/ai-chat/sessions.md). For general public-token usage (expiration formats, trigger tokens, scoping to runs and tasks), see [Realtime authentication](/docs/realtime/auth.md).
+For the full channel HTTP surface these scopes authorize, see [Session channels](https://trigger.dev/docs/management/sessions/channels.md). For the SDK side, see [Sessions](https://trigger.dev/docs/ai-chat/sessions.md). For general public-token usage (expiration formats, trigger tokens, scoping to runs and tasks), see [Realtime authentication](https://trigger.dev/docs/realtime/auth.md).
 
 
 This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.
