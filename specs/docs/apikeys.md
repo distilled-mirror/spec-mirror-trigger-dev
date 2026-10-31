@@ -13,6 +13,11 @@
 > API keys grant access to your Trigger.dev environment. Store them in a secret manager or backend
 > environment variable, never commit them to source control, and never expose them in frontend code.
 
+> [!TIP]
+>
+> To access AWS or another external service from a deployed task without stored cloud keys, use
+> [workload identity](https://trigger.dev/docs/oidc.md). Trigger.dev API keys cannot mint OIDC tokens.
+
 ## Create an API key
 
 Create a separate named key for each service or integration that accesses Trigger.dev.
@@ -161,11 +166,11 @@ Keep your instance and SDK current before creating keys. Calling a public-token 
 
 ## Next steps
 
-> **[Trigger tasks](https://trigger.dev/docs/triggering.md)**
+> [card] [Trigger tasks](https://trigger.dev/docs/triggering.md)
 >
 > Trigger tasks from your backend with an environment API key.
 
-> **[Realtime authentication](https://trigger.dev/docs/realtime/auth.md)**
+> [card] [Realtime authentication](https://trigger.dev/docs/realtime/auth.md)
 >
 > Create scoped public tokens for frontend and realtime access.
 

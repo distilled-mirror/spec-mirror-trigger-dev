@@ -6,19 +6,19 @@
 
 > Build and run durable AI agents and workflows in TypeScript. Long-running tasks with retries, queues, webhooks, observability, and elastic scaling. Open source and self-hostable.
 
-> **[Quick start](https://trigger.dev/docs/quick-start.md)**
+> [card] [Quick start](https://trigger.dev/docs/quick-start.md)
 >
 > Go from zero to your first task in 3 minutes.
 
-> **[Build AI agents](https://trigger.dev/docs/ai-chat/overview.md)**
+> [card] [Build AI agents](https://trigger.dev/docs/ai-chat/overview.md)
 >
 > Durable, multi-turn agents with `chat.agent`, from your frontend to Slack and Linear.
 
-> **[AI coding assistants](https://trigger.dev/docs/building-with-ai.md)**
+> [card] [AI coding assistants](https://trigger.dev/docs/building-with-ai.md)
 >
 > Let Claude Code, Cursor and Windsurf write correct Trigger.dev code with the MCP server, Skills and rules.
 
-> **[Guides & examples](https://trigger.dev/docs/guides/introduction.md)**
+> [card] [Guides & examples](https://trigger.dev/docs/guides/introduction.md)
 >
 > Frameworks like Next.js, worked example projects, and step-by-step how-to guides.
 
@@ -59,27 +59,27 @@ export const supportAgent = chat.agent({
 });
 ```
 
-> **[Agent quick start](https://trigger.dev/docs/ai-chat/quick-start.md)**
+> [card] [Agent quick start](https://trigger.dev/docs/ai-chat/quick-start.md)
 >
 > Build a chat agent and its frontend end to end.
 
-> **[Sessions](https://trigger.dev/docs/ai-chat/sessions.md)**
+> [card] [Sessions](https://trigger.dev/docs/ai-chat/sessions.md)
 >
 > Each conversation's durable state and two-way stream, across all its runs.
 
-> **[Tools](https://trigger.dev/docs/ai-chat/tools.md)**
+> [card] [Tools](https://trigger.dev/docs/ai-chat/tools.md)
 >
 > Declare tools on your agent and get them back typed in `run()`.
 
-> **[Human in the loop](https://trigger.dev/docs/ai-chat/patterns/human-in-the-loop.md)**
+> [card] [Human in the loop](https://trigger.dev/docs/ai-chat/patterns/human-in-the-loop.md)
 >
 > Pause a tool call for approval and resume when a person decides.
 
-> **[Slack agents](https://trigger.dev/docs/webhooks/slack.md)**
+> [card] [Slack agents](https://trigger.dev/docs/webhooks/slack.md)
 >
 > Turn an agent into a native Slack agent with `@trigger.dev/slack`.
 
-> **[Linear agents](https://trigger.dev/docs/webhooks/linear.md)**
+> [card] [Linear agents](https://trigger.dev/docs/webhooks/linear.md)
 >
 > Assign Linear issues to an agent with `@trigger.dev/linear`.
 
@@ -87,63 +87,63 @@ Version your [prompts](https://trigger.dev/docs/ai/prompts.md) in code and chang
 
 ## Run work
 
-> **[Writing tasks](https://trigger.dev/docs/tasks/overview.md)**
+> [card] [Writing tasks](https://trigger.dev/docs/tasks/overview.md)
 >
 > The durable functions at the core of Trigger.dev, written in your existing codebase.
 
-> **[Triggering tasks](https://trigger.dev/docs/triggering.md)**
+> [card] [Triggering tasks](https://trigger.dev/docs/triggering.md)
 >
 > Trigger a task from your backend, your frontend, or another task.
 
-> **[Runs](https://trigger.dev/docs/runs.md)**
+> [card] [Runs](https://trigger.dev/docs/runs.md)
 >
 > Every execution of a task is a run, with its status, retries, logs and trace.
 
-> **[Realtime](https://trigger.dev/docs/realtime/overview.md)**
+> [card] [Realtime](https://trigger.dev/docs/realtime/overview.md)
 >
 > Stream run status and LLM output to your frontend with React hooks.
 
 ## React to events
 
-> **[Webhooks](https://trigger.dev/docs/webhooks/overview.md)**
+> [card] [Webhooks](https://trigger.dev/docs/webhooks/overview.md)
 >
 > Hosted, verified endpoints for Stripe, GitHub and more, delivered to your tasks and agents.
 
-> **[Scheduled tasks](https://trigger.dev/docs/tasks/scheduled.md)**
+> [card] [Scheduled tasks](https://trigger.dev/docs/tasks/scheduled.md)
 >
 > Run a task on a cron schedule, with timezone support.
 
-> **[Webhook waiters](https://trigger.dev/docs/webhooks/waiters.md)**
+> [card] [Webhook waiters](https://trigger.dev/docs/webhooks/waiters.md)
 >
 > Pause a run until a matching webhook arrives, like a payment confirmation.
 
-> **[Waits](https://trigger.dev/docs/wait.md)**
+> [card] [Waits](https://trigger.dev/docs/wait.md)
 >
 > Pause a run for a duration, until a date, or until a token is completed. A waiting run doesn't use compute.
 
 ## Run in production
 
-> **[Queues & concurrency](https://trigger.dev/docs/queues.md)**
+> [card] [Queues & concurrency](https://trigger.dev/docs/queues.md)
 >
 > Control how many runs execute at once, globally or per tenant.
 
-> **[Machines](https://trigger.dev/docs/machines.md)**
+> [card] [Machines](https://trigger.dev/docs/machines.md)
 >
 > Choose the CPU and memory each task runs on.
 
-> **[Deployment](https://trigger.dev/docs/deployment/overview.md)**
+> [card] [Deployment](https://trigger.dev/docs/deployment/overview.md)
 >
 > Atomic, versioned deploys, with preview branches and environments.
 
-> **[Errors & retries](https://trigger.dev/docs/errors-retrying.md)**
+> [card] [Errors & retries](https://trigger.dev/docs/errors-retrying.md)
 >
 > Retry failed attempts automatically, and decide what happens when a task throws.
 
-> **[Logs, traces & metrics](https://trigger.dev/docs/logging.md)**
+> [card] [Logs, traces & metrics](https://trigger.dev/docs/logging.md)
 >
 > A full trace of every run, with your logs and spans.
 
-> **[Query & dashboards](https://trigger.dev/docs/observability/query.md)**
+> [card] [Query & dashboards](https://trigger.dev/docs/observability/query.md)
 >
 > Query your runs with TRQL, and build dashboards from the results.
 
@@ -167,19 +167,19 @@ Version your [prompts](https://trigger.dev/docs/ai/prompts.md) in code and chang
 
 We'd love to hear from you or give you a hand getting started. Here are some ways to get in touch with us.
 
-> **[Join our Discord server](https://discord.gg/kA47vcd8P6)**
+> [card] [Join our Discord server](https://discord.gg/kA47vcd8P6)
 >
 > Our Discord is the best place to get help with any questions about Trigger.dev.
 
-> **[Follow us on X](https://twitter.com/triggerdotdev)**
+> [card] [Follow us on X](https://twitter.com/triggerdotdev)
 >
 > Follow us to get the latest updates and news.
 
-> **[Schedule a call](https://cal.com/team/triggerdotdev/founders-call)**
+> [card] [Schedule a call](https://cal.com/team/triggerdotdev/founders-call)
 >
 > Arrange a call with one of the founders to get help with any questions.
 
-> **[Give us a star on GitHub](https://github.com/triggerdotdev/trigger.dev)**
+> [card] [Give us a star on GitHub](https://github.com/triggerdotdev/trigger.dev)
 >
 > Check out our GitHub repo, and give us a star if you like what we're doing.
 

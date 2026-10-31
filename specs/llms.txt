@@ -16,6 +16,7 @@
 - [Runs](https://trigger.dev/docs/runs.md): Understanding the lifecycle of task run execution in Trigger.dev
 - [Using runs.list() efficiently](https://trigger.dev/docs/runs/list-best-practices.md): When to use runs.list(), the patterns to avoid, and what to use instead.
 - [API keys](https://trigger.dev/docs/apikeys.md): Authenticate backend requests with environment-specific API keys.
+- [Workload identity](https://trigger.dev/docs/oidc.md): Access AWS from your tasks without storing long-lived credentials.
 - [Building with AI: overview](https://trigger.dev/docs/building-with-ai.md): Tools and resources for building Trigger.dev projects with AI coding assistants.
 - [MCP Introduction](https://trigger.dev/docs/mcp-introduction.md): Learn how to install and configure the Trigger.dev MCP Server
 - [MCP Tools](https://trigger.dev/docs/mcp-tools.md): Learn about how to use the tools available in the Trigger.dev MCP Server
@@ -91,6 +92,7 @@
 - [Upgrade Guide: prerelease → Sessions-as-run-manager](https://trigger.dev/docs/ai-chat/upgrade-guide.md): Migrating chat.agent code from the prerelease API to the Sessions-as-run-manager release.
 - [AI Agents SDK changelog](https://trigger.dev/docs/ai-chat/changelog.md): Changelog for the AI Agents SDK.
 - [Webhooks overview](https://trigger.dev/docs/webhooks/overview.md): Receive provider webhooks on hosted, verified endpoints and route each event to tasks, agents, and waiting runs.
+- [Webhooks public beta](https://trigger.dev/docs/webhooks/public-beta.md): Webhooks are available to every organization in the normal Trigger.dev release. Install the packages, see what may change before general availability, and send feedback.
 - [Sources and verification](https://trigger.dev/docs/webhooks/sources.md): Choose an endpoint's source, configure verification, and type the event its subscribers receive.
 - [Connect a webhook provider](https://trigger.dev/docs/webhooks/connect.md): Register an endpoint's URL and signing secret with the provider, by hand or with an AI coding agent, then check that events arrive.
 - [Deliveries and endpoints](https://trigger.dev/docs/webhooks/deliveries.md): Inspect webhook payloads, where each delivery went, and the runs it started or resumed.
@@ -158,6 +160,7 @@
 - [CLI switch command](https://trigger.dev/docs/cli-switch.md): The `trigger.dev switch` command can be used to switch between profiles.
 - [CLI tasks commands](https://trigger.dev/docs/cli-tasks-commands.md): Use these commands to trigger tasks from your terminal.
 - [CLI update command](https://trigger.dev/docs/cli-update-commands.md): Use these options when using the `update` CLI command.
+- [CLI webhooks commands](https://trigger.dev/docs/cli-webhooks-commands.md): Set or generate the signing secret of a hosted webhook endpoint from your terminal, without printing it.
 - [CLI whoami command](https://trigger.dev/docs/cli-whoami-commands.md): Use these options to display the current logged in user and project details.
 - [Query](https://trigger.dev/docs/observability/query.md): Query allows you to write custom queries against your data using TRQL (Trigger.dev Query Language), a SQL-style language based on ClickHouse SQL. You can query your data through the dashboard, SDK, or REST API.
 - [Dashboards](https://trigger.dev/docs/observability/dashboards.md): Create custom dashboards with real-time metrics powered by TRQL queries.

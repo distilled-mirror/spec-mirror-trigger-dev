@@ -46,7 +46,7 @@ function personalAccessTokenExample() {
 }
 ```
 
-> **View endpoint support**
+> [accordion] View endpoint support
 >
 > Consult the following table to see which endpoints support each authentication method.
 >
@@ -101,37 +101,37 @@ await envvars.upload("proj_1234", "dev", {
 
 When working with preview branches, you may need to target a specific branch when making API calls. This is particularly useful for managing environment variables or other resources that are scoped to individual preview branches.
 
-**SDK**
+> [tab] SDK
+>
+> To target a specific preview branch, include the `previewBranch` option in your SDK configuration:
+>
+> ```ts theme={"theme":"css-variables"}
+> import { configure, envvars } from "@trigger.dev/sdk";
+>
+> configure({
+>   accessToken: process.env["TRIGGER_ACCESS_TOKEN"], // starts with tr_pat_
+>   previewBranch: "feature-xyz",
+> });
+>
+> await envvars.update("proj_1234", "preview", "DATABASE_URL", {
+>   value: "your_preview_database_url",
+> });
+> ```
 
-To target a specific preview branch, include the `previewBranch` option in your SDK configuration:
-
-```ts theme={"theme":"css-variables"}
-import { configure, envvars } from "@trigger.dev/sdk";
-
-configure({
-  accessToken: process.env["TRIGGER_ACCESS_TOKEN"], // starts with tr_pat_
-  previewBranch: "feature-xyz",
-});
-
-await envvars.update("proj_1234", "preview", "DATABASE_URL", {
-  value: "your_preview_database_url",
-});
-```
-
-**cURL**
-
-To target a specific preview or development branch, include the `x-trigger-branch` header in your API requests with the branch name as the value:
-
-```bash theme={"theme":"css-variables"}
-curl --request PUT \
-  --url https://api.trigger.dev/api/v1/projects/{projectRef}/envvars/preview/DATABASE_URL \
-  --header 'Authorization: Bearer <token>' \
-  --header 'x-trigger-branch: feature-xyz' \
-  --header 'Content-Type: application/json' \
-  --data '{
-    "value": "your_preview_database_url"
-  }'
-```
+> [tab] cURL
+>
+> To target a specific preview or development branch, include the `x-trigger-branch` header in your API requests with the branch name as the value:
+>
+> ```bash theme={"theme":"css-variables"}
+> curl --request PUT \
+>   --url https://api.trigger.dev/api/v1/projects/{projectRef}/envvars/preview/DATABASE_URL \
+>   --header 'Authorization: Bearer <token>' \
+>   --header 'x-trigger-branch: feature-xyz' \
+>   --header 'Content-Type: application/json' \
+>   --data '{
+>     "value": "your_preview_database_url"
+>   }'
+> ```
 
 This will set the `DATABASE_URL` environment variable specifically for the `feature-xyz` preview branch.
 
