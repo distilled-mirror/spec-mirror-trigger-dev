@@ -19,11 +19,20 @@
 - [Custom API key access](https://trigger.dev/docs/apikeys/custom-access.md): Build an API key's access from presets and per-area levels, limit it to selected tasks, and save the result as a preset your organization can reuse.
 - [OpenID Connect (OIDC)](https://trigger.dev/docs/oidc.md): Use workload identity to access external services from your tasks without storing long-lived credentials.
 - [Connect to AWS](https://trigger.dev/docs/oidc/aws.md): Assume an IAM role from your tasks without storing AWS access keys.
+- [Connect to Microsoft Azure](https://trigger.dev/docs/oidc/azure.md): Authenticate to Azure from your tasks with a federated identity credential instead of a client secret or certificate.
+- [Connect to Google Cloud](https://trigger.dev/docs/oidc/gcp.md): Authenticate to Google Cloud from your tasks with workload identity federation instead of a service account key.
 - [Connect to Anthropic](https://trigger.dev/docs/oidc/anthropic.md): Call Claude from your tasks and chat agents without storing an Anthropic API key.
+- [Connect to HashiCorp Vault](https://trigger.dev/docs/oidc/vault.md): Log in to Vault from your tasks with JWT auth instead of a long-lived Vault token.
 - [Connect to Infisical](https://trigger.dev/docs/oidc/infisical.md): Read secrets from Infisical using your task's workload identity.
+- [Connect to Doppler](https://trigger.dev/docs/oidc/doppler.md): Fetch secrets from Doppler in your tasks with a service account identity instead of a stored Doppler token.
+- [Connect to Snowflake](https://trigger.dev/docs/oidc/snowflake.md): Connect to Snowflake from your tasks with workload identity federation instead of a password or private key.
+- [Connect to Databricks](https://trigger.dev/docs/oidc/databricks.md): Authenticate to Databricks from your tasks with a federation policy instead of a personal access token or client secret.
+- [Connect to Hugging Face](https://trigger.dev/docs/oidc/hugging-face.md): Exchange a Trigger.dev OIDC token for a short-lived Hugging Face token to run inference, download gated models or read one repo, without storing an HF_TOKEN.
+- [Connect to OpenRouter](https://trigger.dev/docs/oidc/openrouter.md): Exchange a Trigger.dev OIDC token for a short-lived OpenRouter access token, so your tasks call models without an OPENROUTER_API_KEY.
 - [Custom OIDC integrations](https://trigger.dev/docs/oidc/custom.md): Connect tasks to services without an official Trigger.dev OIDC integration.
 - [Building with AI: overview](https://trigger.dev/docs/building-with-ai.md): Tools and resources for building Trigger.dev projects with AI coding assistants.
 - [MCP Introduction](https://trigger.dev/docs/mcp-introduction.md): Learn how to install and configure the Trigger.dev MCP Server
+- [Remote MCP server](https://trigger.dev/docs/mcp-remote.md): Connect AI assistants to your Trigger.dev projects over HTTP with OAuth, with no local install.
 - [MCP Tools](https://trigger.dev/docs/mcp-tools.md): Learn about how to use the tools available in the Trigger.dev MCP Server
 - [Skills](https://trigger.dev/docs/skills.md): Install Trigger.dev agent skills to teach any AI coding assistant how to write tasks, realtime frontends, and chat.agent AI agents.
 - [Agent rules](https://trigger.dev/docs/mcp-agent-rules.md): Trigger.dev agent rules are now agent skills, installed with the trigger.dev CLI.

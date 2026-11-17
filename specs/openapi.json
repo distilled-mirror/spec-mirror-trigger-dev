@@ -3567,6 +3567,21 @@
                 }
               }
             }
+          },
+          "409": {
+            "description": "The environment variable was changed or deleted by another request while this one was being saved. Nothing was written, so the request can be sent again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -3671,6 +3686,21 @@
           },
           "404": {
             "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A variable in the import was changed or deleted by another request while it was being saved. Variables before it in the import may already have been saved, so sending the request again needs `override` set to `true`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3831,6 +3861,21 @@
                 }
               }
             }
+          },
+          "409": {
+            "description": "The environment variable was changed or deleted by another request while this one was being saved. Nothing was written, so the request can be sent again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -3908,6 +3953,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The environment variable was changed or deleted by another request while this one was being saved. Nothing was written, so the request can be sent again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
