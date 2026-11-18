@@ -6,9 +6,8 @@
 - [Quick start: add Trigger.dev to your project](https://trigger.dev/docs/quick-start.md): Set up Trigger.dev in your existing project in under 3 minutes. Install the SDK, create your first background task, and trigger it from your code.
 - [Manual setup](https://trigger.dev/docs/manual-setup.md): How to manually setup Trigger.dev in your project.
 - [Video walkthrough](https://trigger.dev/docs/video-walkthrough.md): Go from zero to a working task in your Next.js app in 10 minutes.
-- [How Trigger.dev works](https://trigger.dev/docs/how-it-works.md): Understand how Trigger.dev works and how it can help you.
+- [How Trigger.dev works](https://trigger.dev/docs/how-it-works.md): Understand how Trigger.dev runs durable AI agents and workflows.
 - [Limits](https://trigger.dev/docs/limits.md): There are some hard and soft limits that you might hit.
-- [Migrating from v3](https://trigger.dev/docs/migrating-from-v3.md): What's new in v4, how to migrate, and breaking changes.
 - [Tasks: Overview](https://trigger.dev/docs/tasks/overview.md): Tasks are functions that can run for a long time and provide strong resilience to failure.
 - [schemaTask](https://trigger.dev/docs/tasks/schemaTask.md): Define tasks with a runtime payload schema and validate the payload before running the task.
 - [Scheduled tasks (cron)](https://trigger.dev/docs/tasks/scheduled.md): A task that is triggered on a recurring schedule using cron syntax.
@@ -84,6 +83,10 @@
 - [Transcript storage](https://trigger.dev/docs/ai-chat/transcript-storage.md): Where a chat.agent conversation is kept: the UIMessages the runtime saves, the platform default, reading history back, and bringing your own database through the TranscriptStorage adapter.
 - [Migrate from hydrateMessages to transcript storage](https://trigger.dev/docs/ai-chat/migrating-from-hydrate-messages.md): Move a chat.agent that persists its own history through hydrateMessages onto a TranscriptStorage: map your tables, implement load and save, decide whether you need loadContext, and delete the recovery and compaction code you no longer own.
 - [Error handling](https://trigger.dev/docs/ai-chat/error-handling.md): How errors flow through chat.agent — stream errors, hook errors, run failures — and how to recover.
+- [Channels (chat frontends)](https://trigger.dev/docs/webhooks/channels.md): Point Slack (or any chat surface) at an agent: messages become turns and replies post back.
+- [Slack agents](https://trigger.dev/docs/webhooks/slack.md): Turn a chat.agent into a Slack agent: users message it in Slack, it shows its status while it works, streams its reply with its tool calls as a plan, asks for approvals, and stops on Slack's stop button.
+- [Linear agents](https://trigger.dev/docs/webhooks/linear.md): Turn a chat.agent into a Linear agent: assign it an issue or @mention it, and it works the issue inside Linear's agent session UI.
+- [Human-in-the-loop over a channel](https://trigger.dev/docs/webhooks/human-in-the-loop.md): Pause an agent mid-turn to get a human decision from the channel (Slack approve/deny), then resume with the answer.
 - [Sub-Agents](https://trigger.dev/docs/ai-chat/patterns/sub-agents.md): Delegate work to durable sub-agents from a parent agent's tool calls, and stream each sub-agent's work to the frontend as it happens.
 - [Version upgrades](https://trigger.dev/docs/ai-chat/patterns/version-upgrades.md): Gracefully migrate chat agents to a new deployment using chat.requestUpgrade(), chat.endAndContinue(), and the continuation mechanism.
 - [Database persistence for chat](https://trigger.dev/docs/ai-chat/patterns/database-persistence.md): Split conversation state and live session metadata across hooks — preload, turn start, turn complete — without tying the pattern to a specific ORM or schema.
@@ -106,17 +109,61 @@
 - [Upgrade Guide: prerelease → Sessions-as-run-manager](https://trigger.dev/docs/ai-chat/upgrade-guide.md): Migrating chat.agent code from the prerelease API to the Sessions-as-run-manager release.
 - [AI Agents SDK changelog](https://trigger.dev/docs/ai-chat/changelog.md): Changelog for the AI Agents SDK.
 - [Webhooks overview](https://trigger.dev/docs/webhooks/overview.md): Receive provider webhooks on hosted, verified endpoints and route each event to tasks, agents, and waiting runs.
-- [Webhooks public beta](https://trigger.dev/docs/webhooks/public-beta.md): Webhooks are available to every organization in the normal Trigger.dev release. Install the packages, see what may change before general availability, and send feedback.
-- [Sources and verification](https://trigger.dev/docs/webhooks/sources.md): Choose an endpoint's source, configure verification, and type the event its subscribers receive.
-- [Connect a webhook provider](https://trigger.dev/docs/webhooks/connect.md): Register an endpoint's URL and signing secret with the provider, by hand or with an AI coding agent, then check that events arrive.
-- [Deliveries and endpoints](https://trigger.dev/docs/webhooks/deliveries.md): Inspect webhook payloads, where each delivery went, and the runs it started or resumed.
+- [Webhooks quick start](https://trigger.dev/docs/webhooks/quick-start.md): Declare a hosted webhook endpoint, run it in dev, and see your first verified delivery start a task run in under 5 minutes.
+- [How webhooks work](https://trigger.dev/docs/webhooks/how-it-works.md): Trigger.dev verifies, deduplicates and stores every webhook before answering the provider, then routes it to tasks, waiting runs and agents.
+- [Use your own webhook handler](https://trigger.dev/docs/webhooks/own-handler.md): Receive webhooks in a route in your own app and trigger tasks from it with tasks.trigger().
+- [Webhook providers](https://trigger.dev/docs/webhooks/providers.md): Every built-in webhook provider, with its SDK function, the credential it verifies with, and a setup page for each provider.
+- [Attio webhooks](https://trigger.dev/docs/webhooks/providers/attio.md): Receive and verify Attio webhooks with Trigger.dev. Check the HMAC-SHA256 signature in attio-signature and run a task for each Attio event.
+- [Autumn webhooks](https://trigger.dev/docs/webhooks/providers/autumn.md): Receive and verify Autumn webhooks with Trigger.dev. Check the Svix signature and run a task for each Autumn event, filtered on event.type.
+- [Cal.com webhooks](https://trigger.dev/docs/webhooks/providers/cal-com.md): Receive and verify Cal.com webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-cal-signature-256 and run a task for each Cal.com event, filtered on event.triggerEvent.
+- [Calendly webhooks](https://trigger.dev/docs/webhooks/providers/calendly.md): Receive and verify Calendly webhooks with Trigger.dev. Check the HMAC-SHA256 signature in calendly-webhook-signature and run a task for each Calendly event, filtered on event.event.
+- [Clerk webhooks](https://trigger.dev/docs/webhooks/providers/clerk.md): Receive and verify Clerk webhooks with Trigger.dev. Check the Svix signature and run a task for each Clerk event, filtered on event.type.
+- [Discord webhooks](https://trigger.dev/docs/webhooks/providers/discord.md): Receive and verify Discord webhooks with Trigger.dev. Check the Ed25519 signature in x-signature-ed25519 and run a task for each Discord event, filtered on event.event.type.
+- [DocuSign webhooks](https://trigger.dev/docs/webhooks/providers/docusign.md): Receive and verify DocuSign webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-docusign-signature-1 and run a task for each DocuSign event, filtered on event.event.
+- [ElevenLabs webhooks](https://trigger.dev/docs/webhooks/providers/elevenlabs.md): Receive and verify ElevenLabs webhooks with Trigger.dev. Check the HMAC-SHA256 signature in elevenlabs-signature and run a task for each ElevenLabs event, filtered on event.type.
+- [Firecrawl webhooks](https://trigger.dev/docs/webhooks/providers/firecrawl.md): Receive and verify Firecrawl webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-firecrawl-signature and run a task for each Firecrawl event, filtered on event.type.
+- [GitHub webhooks](https://trigger.dev/docs/webhooks/providers/github.md): Receive and verify GitHub webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-hub-signature-256 and run a task for each GitHub event, filtered on header.x-github-event.
+- [GitLab webhooks](https://trigger.dev/docs/webhooks/providers/gitlab.md): Receive and verify GitLab webhooks with Trigger.dev. Check the secret token in x-gitlab-token and run a task for each GitLab event.
+- [Granola webhooks](https://trigger.dev/docs/webhooks/providers/granola.md): Receive and verify Granola webhooks with Trigger.dev. Check the Standard Webhooks signature and run a task for each Granola event, filtered on event.event_type.
+- [Hookdeck webhooks](https://trigger.dev/docs/webhooks/providers/hookdeck.md): Receive webhooks that Hookdeck forwards from any provider. Check the HMAC-SHA256 signature in x-hookdeck-signature and run a Trigger.dev task for each event.
+- [Infisical webhooks](https://trigger.dev/docs/webhooks/providers/infisical.md): Receive and verify Infisical webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-infisical-signature and run a task for each Infisical event, filtered on event.event.
+- [Jira webhooks](https://trigger.dev/docs/webhooks/providers/jira.md): Receive and verify Jira webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-hub-signature and run a task for each Jira event, filtered on event.webhookEvent.
+- [Langfuse webhooks](https://trigger.dev/docs/webhooks/providers/langfuse.md): Receive and verify Langfuse webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-langfuse-signature and run a task for each Langfuse event, filtered on event.type.
+- [Linear webhooks](https://trigger.dev/docs/webhooks/providers/linear.md): Receive and verify Linear webhooks with Trigger.dev. Check the HMAC-SHA256 signature in linear-signature and run a task for each Linear event, filtered on event.type.
+- [Loops webhooks](https://trigger.dev/docs/webhooks/providers/loops.md): Receive and verify Loops webhooks with Trigger.dev. Check the Standard Webhooks signature and run a task for each Loops event, filtered on event.eventName.
+- [Metronome webhooks](https://trigger.dev/docs/webhooks/providers/metronome.md): Receive and verify Metronome webhooks with Trigger.dev. Check the HMAC-SHA256 signature in metronome-webhook-signature and run a task for each Metronome event, filtered on event.type.
+- [Mux webhooks](https://trigger.dev/docs/webhooks/providers/mux.md): Receive and verify Mux webhooks with Trigger.dev. Check the HMAC-SHA256 signature in mux-signature and run a task for each Mux event, filtered on event.type.
+- [OpenAI webhooks](https://trigger.dev/docs/webhooks/providers/openai.md): Receive and verify OpenAI webhooks with Trigger.dev. Check the Standard Webhooks signature and run a task for each OpenAI event, filtered on event.type.
+- [PagerDuty webhooks](https://trigger.dev/docs/webhooks/providers/pagerduty.md): Receive and verify PagerDuty webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-pagerduty-signature and run a task for each PagerDuty event, filtered on event.event.event_type.
+- [Plain webhooks](https://trigger.dev/docs/webhooks/providers/plain.md): Receive and verify Plain webhooks with Trigger.dev. Check the HMAC-SHA256 signature in plain-request-signature and run a task for each Plain event, filtered on event.type.
+- [PlanetScale webhooks](https://trigger.dev/docs/webhooks/providers/planetscale.md): Receive and verify PlanetScale webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-planetscale-signature and run a task for each PlanetScale event, filtered on event.event.
+- [Recall.ai webhooks](https://trigger.dev/docs/webhooks/providers/recall-ai.md): Receive and verify Recall.ai webhooks with Trigger.dev. Check the Standard Webhooks signature and run a task for each Recall.ai event, filtered on event.event.
+- [Replicate webhooks](https://trigger.dev/docs/webhooks/providers/replicate.md): Receive and verify Replicate webhooks with Trigger.dev. Check the Standard Webhooks signature and run a task for each Replicate event, filtered on event.status.
+- [Resend webhooks](https://trigger.dev/docs/webhooks/providers/resend.md): Receive and verify Resend webhooks with Trigger.dev. Check the Svix signature and run a task for each Resend event, filtered on event.type.
+- [Retell AI webhooks](https://trigger.dev/docs/webhooks/providers/retell.md): Receive and verify Retell AI webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-retell-signature and run a task for each Retell AI event, filtered on event.event.
+- [Sentry webhooks](https://trigger.dev/docs/webhooks/providers/sentry.md): Receive and verify Sentry webhooks with Trigger.dev. Check the HMAC-SHA256 signature in sentry-hook-signature and run a task for each Sentry event, filtered on header.sentry-hook-resource.
+- [Shopify webhooks](https://trigger.dev/docs/webhooks/providers/shopify.md): Receive and verify Shopify webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-shopify-hmac-sha256 and run a task for each Shopify event, filtered on header.x-shopify-topic.
+- [Slack webhooks](https://trigger.dev/docs/webhooks/providers/slack.md): Receive and verify Slack webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-slack-signature and run a task for each Slack event, filtered on event.event.type.
+- [Square webhooks](https://trigger.dev/docs/webhooks/providers/square.md): Receive and verify Square webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-square-hmacsha256-signature and run a task for each Square event, filtered on event.type.
+- [Receive and verify Stripe webhooks](https://trigger.dev/docs/webhooks/providers/stripe.md): Verify Stripe's webhook signature and run a Trigger.dev task for each Stripe event, such as checkout.session.completed. Register the endpoint in Stripe, set the whsec_ signing secret, and filter by event type.
+- [Supabase webhooks](https://trigger.dev/docs/webhooks/providers/supabase.md): Receive Supabase database webhooks with Trigger.dev. Check a shared bearer secret and run a task for each insert, update or delete.
+- [Tailscale webhooks](https://trigger.dev/docs/webhooks/providers/tailscale.md): Receive and verify Tailscale webhooks with Trigger.dev. Check the HMAC-SHA256 signature in tailscale-webhook-signature and run a task for each Tailscale event.
+- [Typeform webhooks](https://trigger.dev/docs/webhooks/providers/typeform.md): Receive and verify Typeform webhooks with Trigger.dev. Check the HMAC-SHA256 signature in typeform-signature and run a task for each Typeform event, filtered on event.event_type.
+- [Vapi webhooks](https://trigger.dev/docs/webhooks/providers/vapi.md): Receive and verify Vapi webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-vapi-signature and run a task for each Vapi event, filtered on event.message.type.
+- [Vercel webhooks](https://trigger.dev/docs/webhooks/providers/vercel.md): Receive and verify Vercel webhooks with Trigger.dev. Check the HMAC-SHA1 signature in x-vercel-signature and run a task for each Vercel event, filtered on event.type.
+- [WhatsApp webhooks](https://trigger.dev/docs/webhooks/providers/whatsapp.md): Receive and verify WhatsApp webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-hub-signature-256 and run a task for each WhatsApp event.
+- [WorkOS webhooks](https://trigger.dev/docs/webhooks/providers/workos.md): Receive and verify WorkOS webhooks with Trigger.dev. Check the HMAC-SHA256 signature in workos-signature and run a task for each WorkOS event, filtered on event.event.
+- [Zendesk webhooks](https://trigger.dev/docs/webhooks/providers/zendesk.md): Receive and verify Zendesk webhooks with Trigger.dev. Check the HMAC-SHA256 signature in x-zendesk-webhook-signature and run a task for each Zendesk event, filtered on its event type.
+- [Custom webhook providers](https://trigger.dev/docs/webhooks/custom-providers.md): Verify webhooks from a provider that isn't built in by passing your own HMAC, shared-secret, URL-secret or public-key configuration to webhooks.custom().
+- [Connect a webhook provider](https://trigger.dev/docs/webhooks/connect.md): Register an endpoint's URL and signing credential with the provider, by hand or with an AI coding agent, then check that events arrive.
+- [Webhook signing secrets](https://trigger.dev/docs/webhooks/signing-secrets.md): Set, generate and rotate the credential an endpoint verifies deliveries with, from the dashboard, the CLI, the MCP server or the REST API.
+- [Webhook verification](https://trigger.dev/docs/webhooks/verification.md): How an endpoint verifies each provider's requests, answers provider handshakes, and types the event its subscribers receive.
+- [Webhook tasks](https://trigger.dev/docs/webhooks/webhook-tasks.md): What a webhook() handler receives, the task options it takes, how to group deliveries per customer, and the options an endpoint takes.
 - [Filtering deliveries](https://trigger.dev/docs/webhooks/filters.md): Choose which verified webhook events reach each subscriber, by payload fields, request headers, or endpoint metadata.
 - [Waiting for a webhook](https://trigger.dev/docs/webhooks/waiters.md): Pause a run until a matching webhook arrives on an endpoint, then resume it with the verified event.
 - [Routing to a session](https://trigger.dev/docs/webhooks/session-routing.md): Route verified webhook deliveries to a durable per-key session instead of a fresh run.
-- [Channels (chat frontends)](https://trigger.dev/docs/webhooks/channels.md): Point Slack (or any chat surface) at an agent: messages become turns and replies post back.
-- [Slack agents](https://trigger.dev/docs/webhooks/slack.md): Turn a chat.agent into a Slack agent: users message it in Slack, it shows its status while it works, streams its reply with its tool calls as a plan, asks for approvals, and stops on Slack's stop button.
-- [Linear agents](https://trigger.dev/docs/webhooks/linear.md): Turn a chat.agent into a Linear agent: assign it an issue or @mention it, and it works the issue inside Linear's agent session UI.
-- [Human-in-the-loop](https://trigger.dev/docs/webhooks/human-in-the-loop.md): Pause an agent mid-turn to get a human decision from the channel (Slack approve/deny), then resume with the answer.
+- [Deliveries and endpoints](https://trigger.dev/docs/webhooks/deliveries.md): Inspect webhook payloads, where each delivery went, and the runs it started or resumed.
+- [Webhooks pricing and limits](https://trigger.dev/docs/webhooks/pricing-and-limits.md): What webhooks cost on Trigger.dev Cloud, which plan limits apply, and how to run them self-hosted.
 - [The trigger.config.ts file](https://trigger.dev/docs/config/config-file.md): This file is used to configure your project and how it's built.
 - [Build extensions](https://trigger.dev/docs/config/extensions/overview.md): Customize how your project is built and deployed to Trigger.dev with build extensions
 - [Prisma](https://trigger.dev/docs/config/extensions/prismaExtension.md): Use the prismaExtension build extension to use Prisma with Trigger.dev
@@ -306,6 +353,8 @@
 - [Next.js setup guide](https://trigger.dev/docs/guides/frameworks/nextjs.md): This guide will show you how to setup Trigger.dev in your existing Next.js project, test an example task, and view the run.
 - [Node.js setup guide](https://trigger.dev/docs/guides/frameworks/nodejs.md): This guide will show you how to setup Trigger.dev in your existing Node.js project, test an example task, and view the run.
 - [Remix setup guide](https://trigger.dev/docs/guides/frameworks/remix.md): This guide will show you how to setup Trigger.dev in your existing Remix project, test an example task, and view the run.
+- [Custom webhook handler with Next.js](https://trigger.dev/docs/guides/frameworks/nextjs-webhooks.md): Handle a webhook in your own Next.js API route and trigger a task from it.
+- [Custom webhook handler with Remix](https://trigger.dev/docs/guides/frameworks/remix-webhooks.md): Handle a webhook in your own Remix action and trigger a task from it.
 - [SvelteKit setup guide](https://trigger.dev/docs/guides/community/sveltekit.md): A plugin for SvelteKit to integrate with Trigger.dev.
 - [AI agents overview](https://trigger.dev/docs/guides/ai-agents/overview.md): Real world AI agent example tasks using Trigger.dev
 - [Build a chat agent](https://trigger.dev/docs/guides/ai-agents/chat-agent.md): Create a durable, multi-turn chat agent with chat.agent(), then add tools to it like any AI SDK agent.
@@ -323,11 +372,7 @@
 - [Triggering tasks from Supabase edge functions](https://trigger.dev/docs/guides/frameworks/supabase-edge-functions-basic.md): This guide will show you how to trigger a task from a Supabase edge function, and then view the run in our dashboard.
 - [Triggering tasks from Supabase Database Webhooks](https://trigger.dev/docs/guides/frameworks/supabase-edge-functions-database-webhooks.md): This guide shows you how to trigger a transcribing task when a row is added to a table in a Supabase database, using a Database Webhook and Edge Function.
 - [Authenticating Supabase tasks: JWTs and service roles](https://trigger.dev/docs/guides/frameworks/supabase-authentication.md): Learn how to authenticate Supabase tasks using JWTs for Row Level Security (RLS) or service role keys for admin access.
-- [Using webhooks with Trigger.dev](https://trigger.dev/docs/guides/frameworks/webhooks-guides-overview.md): Guides for using webhooks with Trigger.dev.
-- [Triggering tasks with webhooks in Next.js](https://trigger.dev/docs/guides/frameworks/nextjs-webhooks.md): Learn how to trigger a task from a webhook in a Next.js app.
-- [Triggering tasks with webhooks in Remix](https://trigger.dev/docs/guides/frameworks/remix-webhooks.md): Learn how to trigger a task from a webhook in a Remix app.
-- [Trigger a task from Stripe webhook events](https://trigger.dev/docs/guides/examples/stripe-webhook.md): This example demonstrates how to handle Stripe webhook events using Trigger.dev.
-- [Trigger tasks from Hookdeck webhooks](https://trigger.dev/docs/guides/examples/hookdeck-webhook.md): Forward webhooks from a Hookdeck connection to a hosted Trigger.dev endpoint, verified with the Hookdeck project's signing secret, and run a task for each event.
+- [Migrating from v3](https://trigger.dev/docs/migrating-from-v3.md): What's new in v4, how to migrate, and breaking changes.
 - [Migrating from Mergent](https://trigger.dev/docs/migration-mergent.md): A guide for migrating from Mergent to Trigger.dev
 - [Migrating from n8n](https://trigger.dev/docs/migration-n8n.md): A practical guide for moving your n8n workflows to Trigger.dev
 - [Use cases](https://trigger.dev/docs/guides/use-cases/overview.md): Explore common use cases for Trigger.dev including data processing, media workflows, marketing automation, and AI generation
@@ -389,7 +434,6 @@
 - [dotenvx](https://trigger.dev/docs/guides/community/dotenvx.md): A dotenvx package for Trigger.dev.
 - [Fatima](https://trigger.dev/docs/guides/community/fatima.md): A Fatima package for Trigger.dev.
 - [Rate limiter](https://trigger.dev/docs/guides/community/rate-limiter.md): A rate limiter for Trigger.dev.
-- [SvelteKit setup guide](https://trigger.dev/docs/guides/community/sveltekit.md): A plugin for SvelteKit to integrate with Trigger.dev.
 
 ## OpenAPI Specs
 
