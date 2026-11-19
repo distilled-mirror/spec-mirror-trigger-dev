@@ -73,7 +73,7 @@
 - [Custom agents](https://trigger.dev/docs/ai-chat/custom-agents.md): Build chat agents without chat.agent()'s managed lifecycle: register with chat.customAgent(), then drive turns with the createSession iterator or a hand-rolled loop.
 - [How the AI Agents SDK works](https://trigger.dev/docs/ai-chat/how-it-works.md): End-to-end mechanics of a chat.agent turn: the two durable channels per session, the long-lived task that reads and writes them, and how a chat survives refreshes, deploys, and idle gaps.
 - [Prompts](https://trigger.dev/docs/ai/prompts.md): Define prompt templates as code, version them on deploy, and override from the dashboard without redeploying.
-- [LLM observability](https://trigger.dev/docs/ai/observability.md): Capture Vercel AI SDK calls in a task as spans in the run trace, with model, token usage, cost, and latency. Opt in per call, link calls to prompt versions, and query usage across runs.
+- [LLM observability](https://trigger.dev/docs/ai/observability.md): Capture Vercel AI SDK calls in a task as spans in the run trace, with model, token usage, cost, and latency. Link calls to prompt versions and query usage across runs.
 - [Fast starts](https://trigger.dev/docs/ai-chat/fast-starts.md): Two ways to cut first-turn TTFC: Preload eagerly triggers the run before the first message; Head Start runs step 1 in your warm server while the agent boots in parallel.
 - [Compaction](https://trigger.dev/docs/ai-chat/compaction.md): Automatic context compaction to keep long conversations within token limits.
 - [Prompt caching](https://trigger.dev/docs/ai-chat/prompt-caching.md): Cache the stable prefix of your agent's prompt with Anthropic prompt caching to cut token cost and latency on every turn.
