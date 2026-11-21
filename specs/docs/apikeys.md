@@ -134,9 +134,10 @@ Give a key a list of allowed IP addresses to limit where it can be used. Request
 
 > [!TIP]
 >
-> To lock down an environment, give each backend its own IP-restricted key, move your applications
-> to those keys, then hide the root key. Your tasks keep working because they don't authenticate
-> with your API keys.
+> Give each backend its own IP-restricted key and move your applications to those keys. The
+> dashboard shows only the last four characters of the root key, but masking doesn't stop it from
+> working. To invalidate a root key your apps no longer use, choose **Regenerate…** and revoke
+> the previous key immediately.
 
 ## Change a key's access
 
